@@ -1,0 +1,56 @@
+##########################################
+# Python
+##########################################
+_tmppythonbuild/
+*.pyc
+__pycache__
+dist/
+*.egg-info/
+.ipynb_checkpoints/
+notebook_outputs/
+campaign_outputs/
+
+##########################################
+# macOS
+##########################################
+.DS_Store
+.AppleDouble
+.LSOverride
+
+##########################################
+# Distribution / packaging
+##########################################
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+
+##########################################
+# Latex Files
+##########################################
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.synctex.gz
+
+##########################################
+# Temporary files
+##########################################
+.*.swp
+tmp
+
