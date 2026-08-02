@@ -82,6 +82,21 @@ jobs:
             git -C ".source-checkouts/$name" \
               -c core.hooksPath=/dev/null checkout --quiet --detach FETCH_HEAD
             test "$(git -C ".source-checkouts/$name" rev-parse HEAD)" = "$commit"
+            content_commit="$(python - ".source-checkouts/$name/docs/publication-manifest.json" <<'PY'
+          import json
+          import re
+          import sys
+          from pathlib import Path
+
+          value = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8")).get("source_commit")
+          if not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{40}", value) is None:
+              raise SystemExit("publication manifest has an invalid source_commit")
+          print(value)
+          PY
+            )"
+            git -C ".source-checkouts/$name" \
+              -c credential.helper= -c core.hooksPath=/dev/null \
+              fetch --quiet --no-tags --depth=1 origin "$content_commit"
           done
 
       - name: Run tests and validate source contracts
