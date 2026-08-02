@@ -129,7 +129,9 @@ jobs:
         run: mkdocs build --strict
 
       - name: Validate site links and presentation assets
-        run: python scripts/validate_site.py --site site --css docs/stylesheets/readthedocs.css
+        run: |
+          python scripts/validate_site.py --site site --css docs/stylesheets/readthedocs.css
+          python scripts/validate_accessibility.py --site site
 
       - name: Scan complete site artifact
         shell: bash

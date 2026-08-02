@@ -19,6 +19,10 @@ def fixture(tmp:Path,ptext="# P\n",dtext="# D\n"):
 def hashes(root:Path):return {x.relative_to(root):hashlib.sha256(x.read_bytes()).hexdigest() for x in root.rglob("*") if x.is_file() and ".git" not in x.parts}
 def test_deterministic_inventory_validation_and_source_immutability(tmp_path):
  m,p,d=fixture(tmp_path);before=(hashes(p),hashes(d));out=tmp_path/"out";first=assemble(m,out,p,d);validate(m,out);second=assemble(m,out,p,d);assert first==second;assert before==(hashes(p),hashes(d));assert len(first)==2
+ generated=(out/"pydasc/index.md").read_text()
+ assert '!!! info "Publication record"' in generated
+ assert "**Project:** PyDASC" in generated
+ assert first[1]["commit"] in generated
 def test_commit_mismatch_rejected(tmp_path):
  m,p,d=fixture(tmp_path);data=yaml.safe_load(m.read_text());data["sources"]["pydasc"]["checkout_commit"]="a"*40;m.write_text(yaml.safe_dump(data));
  with pytest.raises(CollectionError,match="commit mismatch"):assemble(m,tmp_path/"out",p,d)

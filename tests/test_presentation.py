@@ -5,6 +5,10 @@ from pathlib import Path
 
 import yaml
 
+import sys
+sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
+from validate_accessibility import validate as validate_accessibility
+
 
 ROOT = Path(__file__).parents[1]
 CSS = ROOT / "docs/stylesheets/readthedocs.css"
@@ -60,3 +64,15 @@ def test_mobile_accessibility_overflow_motion_and_print_rules_exist() -> None:
     assert 'event.key === "Escape"' in javascript
     assert not re.search(r"url\(\s*['\"]?/", css)
     assert "/Users/" not in css + header + javascript
+
+
+def test_built_site_passes_semantic_accessibility_audit(tmp_path: Path) -> None:
+    page = tmp_path / "index.html"
+    page.write_text(
+        '<!doctype html><html lang="en"><head><title>Page</title></head>'
+        '<body><nav aria-label="Primary"></nav><main><h1>Page</h1>'
+        '<h2>Section</h2><table><tr><th>Value</th></tr></table>'
+        '<img src="example.png" alt="Example"></main></body></html>',
+        encoding="utf-8",
+    )
+    validate_accessibility(tmp_path)

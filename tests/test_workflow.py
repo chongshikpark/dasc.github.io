@@ -41,6 +41,7 @@ def test_docs_check_pins_actions_and_reproduces_local_build() -> None:
         "scripts/validate_docs.py",
         "diff --recursive --no-dereference",
         "mkdocs build --strict",
+        "scripts/validate_accessibility.py",
     ):
         assert command in text
 
@@ -83,6 +84,7 @@ def test_pages_artifact_is_validated_scanned_and_sha_pinned() -> None:
     positions = [text.index(item) for item in required_in_order]
     assert positions == sorted(positions)
     assert "persist-credentials: false" in text
+    assert "scripts/validate_accessibility.py" in text
     assert "enablement: false" in text
     assert re.search(r"actions/upload-pages-artifact@[0-9a-f]{40}[^\n]*\n\s+with:\n\s+path: site(?:\n|$)", text)
     assert "gh-pages" not in text

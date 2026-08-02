@@ -28,6 +28,11 @@ ALLOWED = {".md", ".png", ".jpg", ".jpeg", ".svg", ".webp"}
 MEDIA = {".md": "text/markdown", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".svg": "image/svg+xml", ".webp": "image/webp"}
 MAX_FILE_BYTES = 5 * 1024 * 1024
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+SPDX_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9.+-]*$")
+DOCUMENTATION_STATUSES = {
+    "Draft", "Reviewed", "Reference", "Validated", "Unvalidated",
+    "Superseded", "Released",
+}
 LINK_RE = re.compile(r"(!?\[[^\]]*\])\(([^)\s]+)(?:\s+['\"][^)]*['\"])?\)")
 FORBIDDEN = re.compile(r"(?:-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|github_pat_[A-Za-z0-9_]+|ghp_[A-Za-z0-9]+|AKIA[0-9A-Z]{16}|/(?:Users|home)/[^\s)`]+|https?://(?:localhost|127\.0\.0\.1|[^/\s]+\.internal)(?:[/\s)]|$))")
 
@@ -117,10 +122,12 @@ def _source_contract(path: Path, name: str, repository: str, checkout: str) -> t
         if destination.parts[0] != name or source.suffix.lower() not in ALLOWED or item["media_type"] != MEDIA[source.suffix.lower()]:
             raise CollectionError(f"invalid approved file: {source}")
         status = _mapping(item["documentation_status"], {"label", "evidence"}, "status")
-        if not isinstance(status["label"], str) or not isinstance(status["evidence"], str) or not status["evidence"].strip():
+        if status["label"] not in DOCUMENTATION_STATUSES or not isinstance(status["evidence"], str) or not status["evidence"].strip():
             raise CollectionError(f"invalid status for {source}")
         rights_keys = {"spdx_license", "license_file"} | ({"attribution"} if name == "dasc" else set())
         rights = _mapping(item["redistribution"], rights_keys, "redistribution")
+        if not isinstance(rights["spdx_license"], str) or not SPDX_RE.fullmatch(rights["spdx_license"]):
+            raise CollectionError(f"invalid SPDX license for {source}")
         license_path = _path(rights["license_file"], "license_file")
         license_bytes = _git(path.parents[1], "show", f"{content}:{license_path.as_posix()}", binary=True)
         if not license_bytes:
@@ -241,8 +248,16 @@ def assemble(manifest: Path, output: Path, pydasc: Path, dasc: Path) -> list[dic
                 if FORBIDDEN.search(body):
                     raise CollectionError(f"credential-like or local content: {entry.source}")
                 body = _rewrite(body, entry, selected, root)
-                banner = f"<!-- Generated; source={entry.repository}/blob/{entry.content_commit}/{entry.source.as_posix()}; status={entry.status}; license={entry.license_id}; do not edit. -->\n\n"
-                data = (banner + body.rstrip() + "\n").encode()
+                source_url = f"{entry.repository}/blob/{entry.content_commit}/{entry.source.as_posix()}"
+                project = "PyDASC" if entry.source_name == "pydasc" else "DASC"
+                banner = f"<!-- Generated; source={source_url}; status={entry.status}; license={entry.license_id}; do not edit. -->\n\n"
+                publication = (
+                    '!!! info "Publication record"\n'
+                    f"    **Project:** {project} · **Status:** {entry.status} · **License:** `{entry.license_id}`  \n"
+                    f"    **Immutable revision:** [`{entry.content_commit}`]({source_url}) · "
+                    f"**Source path:** `{entry.source.as_posix()}`\n\n"
+                )
+                data = (banner + publication + body.rstrip() + "\n").encode()
             destination.write_bytes(data)
             inventory.append({"destination": entry.destination.as_posix(), "sha256": hashlib.sha256(data).hexdigest(), "repository": entry.repository, "source": entry.source.as_posix(), "commit": entry.content_commit, "status": entry.status, "license": entry.license_id})
         output = output.resolve()

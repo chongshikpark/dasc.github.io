@@ -256,3 +256,22 @@ See [AGENTS.md](AGENTS.md) for contributor and automation rules and [docs/codex_
 ## License and attribution
 
 The website's own license should be declared in this repository. Imported files retain their upstream copyright and license terms. Each generated document should identify its source repository, source path, and exact commit. Do not assume that public visibility alone grants republication rights.
+
+The collector renders that publication record visibly at the start of every
+imported page, including the owning project, controlled documentation status,
+SPDX license identifier, source path, and immutable content commit. The same
+values remain in the generated inventory for artifact review.
+
+## Accessibility verification
+
+The release pipeline applies semantic checks to every generated HTML page in
+addition to strict MkDocs and link validation:
+
+```bash
+python scripts/validate_accessibility.py --site site
+```
+
+This gate checks document language and title, main and named navigation
+landmarks, one level-one heading, unskipped heading order, image alternative-text
+attributes, table headers, and unique element IDs. It complements—but does not
+replace—manual keyboard, zoom, contrast, screen-reader, mobile, and print review.
