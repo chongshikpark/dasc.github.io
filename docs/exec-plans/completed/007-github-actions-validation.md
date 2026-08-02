@@ -41,16 +41,18 @@ Completed locally on 2026-08-02:
 - Verified the action releases and pins against the actions' official GitHub
   release pages.
 
-## External activation precondition
+## External activation status
 
-The pinned publication-contract commits are not yet reachable from the local
-`origin/main` tracking refs:
+After the source pushes, an anonymous fresh-fetch rehearsal verified that DASC
+commit `94033eae4d8eac81f4c42c41f6cfba69e1cd2a25` is publicly reachable.
 
-- PyDASC `0506b8a9feb75813ae979f0c1c25a307b21096d2` is one commit ahead.
-- DASC `94033eae4d8eac81f4c42c41f6cfba69e1cd2a25` is two commits ahead.
+PyDASC still fails at the anonymous Git endpoint before commit resolution with
+`could not read Username for 'https://github.com'`. Its locked commit is
+`0506b8a9feb75813ae979f0c1c25a307b21096d2`. This normally indicates that the
+repository is not currently readable by an unsigned Git client; it is not a
+collector or commit-validation failure.
 
-An anonymous fresh-fetch rehearsal therefore could not obtain the locked commits.
-This is intentionally not bypassed with credentials or moving branch refs. The
-reviewed source commits must be published to their stated public repositories
-before the GitHub-hosted validation job can pass. Task 7 did not push them, in
-accordance with its scope and the upstream read-only rule.
+The workflow intentionally does not bypass this condition with credentials or a
+moving branch ref. PyDASC must be anonymously Git-readable before the hosted job
+can pass. Task 7 did not alter its visibility or credentials, in accordance with
+its scope and the upstream read-only rule.
