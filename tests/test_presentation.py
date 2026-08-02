@@ -43,7 +43,9 @@ def test_required_tokens_desktop_sidebar_and_bounded_content_exist() -> None:
     assert "@media screen and (min-width: 76.25em)" in css
     assert "width: var(--dasc-sidebar-width)" in css
     assert "max-width: var(--dasc-content-max)" in css
-    assert re.search(r"\.md-sidebar--secondary\s*\{\s*display:\s*none;\s*\}", css)
+    assert ".md-sidebar--secondary:not([hidden])" in css
+    assert re.search(r"\.md-sidebar--secondary:not\(\[hidden\]\)\s*\{\s*display:\s*none;\s*\}", css)
+    assert ".md-sidebar--secondary:not([hidden]) ~ .md-content > .md-content__inner" in css
     assert re.search(r"\.md-content\s*\{\s*max-width:\s*none;", css)
 
 

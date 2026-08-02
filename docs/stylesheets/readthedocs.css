@@ -128,8 +128,13 @@ a,
 }
 
 /* Keep one navigation column and one article column at every viewport. */
-.md-sidebar--secondary {
+.md-sidebar--secondary,
+.md-sidebar--secondary:not([hidden]) {
   display: none;
+}
+
+[dir] .md-sidebar--secondary:not([hidden]) ~ .md-content > .md-content__inner {
+  margin-inline: auto;
 }
 
 .md-content__inner {
