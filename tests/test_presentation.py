@@ -35,7 +35,7 @@ def test_required_tokens_desktop_sidebar_and_bounded_content_exist() -> None:
         "--dasc-accent": "#2980b9",
         "--dasc-page-bg": "#fcfcfc",
         "--dasc-text": "#404040",
-        "--dasc-content-max": "800px",
+        "--dasc-content-max": "1000px",
     }
     for token, value in required.items():
         assert re.search(rf"{re.escape(token)}\s*:\s*{re.escape(value)}\s*;", css)
@@ -43,6 +43,8 @@ def test_required_tokens_desktop_sidebar_and_bounded_content_exist() -> None:
     assert "@media screen and (min-width: 76.25em)" in css
     assert "width: var(--dasc-sidebar-width)" in css
     assert "max-width: var(--dasc-content-max)" in css
+    assert re.search(r"\.md-sidebar--secondary\s*\{\s*display:\s*none;\s*\}", css)
+    assert re.search(r"\.md-content\s*\{\s*max-width:\s*none;", css)
 
 
 def test_mobile_accessibility_overflow_motion_and_print_rules_exist() -> None:

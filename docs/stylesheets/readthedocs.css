@@ -7,7 +7,7 @@
   --dasc-link: #1f6f9f;
   --dasc-page-bg: #fcfcfc;
   --dasc-text: #404040;
-  --dasc-content-max: 800px;
+  --dasc-content-max: 1000px;
   --dasc-sidebar-top: 168px;
   --dasc-surface: #ffffff;
   --dasc-border: #e1e4e5;
@@ -125,6 +125,11 @@ a,
 
 .md-content {
   min-width: 0;
+}
+
+/* Keep one navigation column and one article column at every viewport. */
+.md-sidebar--secondary {
+  display: none;
 }
 
 .md-content__inner {
@@ -451,13 +456,10 @@ a,
     box-shadow: inset 4px 0 0 var(--dasc-accent);
   }
 
-  .md-sidebar--secondary {
-    display: none;
-  }
-
   .md-content {
-    max-width: calc(var(--dasc-content-max) + 5.6rem);
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
+    background: var(--dasc-surface);
   }
 
   .md-content__inner {

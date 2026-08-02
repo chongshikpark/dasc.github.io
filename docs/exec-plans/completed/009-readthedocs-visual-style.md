@@ -10,7 +10,7 @@ changed.
 The design uses a fixed 300 px charcoal navigation rail and blue project/search
 block above the `76.25em` desktop breakpoint. Below it, Material's drawer and
 compact header remain in use. At `30em` and below, tables become independently
-scrollable and content padding contracts further. A white 800 px reading surface
+scrollable and content padding contracts further. A white 1000 px reading surface
 sits on an off-white page background.
 
 Local/system font fallbacks replace external font requests. Lato-compatible sans

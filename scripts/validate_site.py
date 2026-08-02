@@ -21,7 +21,7 @@ REQUIRED_TOKENS = {
     "--dasc-accent": "#2980b9",
     "--dasc-page-bg": "#fcfcfc",
     "--dasc-text": "#404040",
-    "--dasc-content-max": "800px",
+    "--dasc-content-max": "1000px",
 }
 
 
