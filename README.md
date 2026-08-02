@@ -181,7 +181,16 @@ Do not hand-edit generated copies. Fix content upstream or adjust the reviewed c
 
 ## Continuous integration and deployment
 
-`docs-check.yml` runs for pull requests and pushes. It installs pinned dependencies, collects the approved documentation, runs security and consistency tests, and executes `mkdocs build --strict`.
+`docs-check.yml` runs for documentation-related pull requests and main-branch
+pushes with `contents: read` permission. It checks out the website without
+persisting credentials, reads the exact source locks from `docs-manifest.yml`,
+fetches those commits through public HTTPS into detached temporary worktrees, and
+never executes source-repository configuration or code. It runs the same tests,
+collector, validator, and strict MkDocs build used locally, repeats collection and
+compares the complete generated tree byte-for-byte, and scans the built `site/`
+artifact for symlinks, oversized files, credentials, and private or local paths.
+Its dependency cache is keyed by `requirements-docs.txt`; it neither uploads nor
+deploys an artifact.
 
 `deploy-pages.yml` runs on pushes to `main` and by manual dispatch. It should:
 
