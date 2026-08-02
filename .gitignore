@@ -64,6 +64,7 @@ MANIFEST
 CODEX_TASK_WEBSITE.md
 codex_tasks.md
 CODEX_TASK_READTHEDOCS_STYLE.md
+CODEX_TASKS_DASC_PHYSICS_DOCUMENTATION.md
 
 # Generated documentation and build output
 docs/pydasc/

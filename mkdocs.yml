@@ -9,6 +9,7 @@ site_dir: site
 exclude_docs: |
   CODEX_TASK_WEBSITE.md
   CODEX_TASK_READTHEDOCS_STYLE.md
+  CODEX_TASKS_DASC_PHYSICS_DOCUMENTATION.md
   codex_tasks.md
   architecture/
   exec-plans/
@@ -35,7 +36,6 @@ theme:
     - navigation.sections
     - navigation.indexes
     - navigation.path
-    - navigation.footer
     - navigation.top
     - navigation.tracking
     - search.highlight
@@ -71,5 +71,5 @@ nav:
           - Public API policy: pydasc/reference/public-api.md
           - Conventions: pydasc/reference/conventions.md
   - DASC:
-      - Overview: dasc/index.md
+      - Project overview: dasc/index.md
   - Contribute: contributing.md

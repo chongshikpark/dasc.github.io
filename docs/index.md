@@ -1,6 +1,6 @@
 # DASC documentation
 
-DASC is a scientific software ecosystem for working with data assimilation and related workflows. This portal brings the public documentation for its two projects into one consistent, searchable site while keeping each upstream repository authoritative.
+DASC is concerned with differentiable, self-consistent space-charge modeling and beam-dynamics maps. This portal brings the public documentation for the DASC physics project and its PyDASC computational package into one consistent, searchable site while keeping each upstream repository authoritative.
 
 ## Choose the right project
 
@@ -18,7 +18,7 @@ DASC is a scientific software ecosystem for working with data assimilation and r
 
     ---
 
-    Start here for the DASC project, its installation notes, and command-line workflows.
+    Start here for the physics, derivation, analysis, reproducibility, and publication project built around the methods implemented in PyDASC.
 
     [Open the DASC documentation](dasc/index.md)
 
