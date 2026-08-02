@@ -8,6 +8,8 @@ docs_dir: docs
 site_dir: site
 exclude_docs: |
   CODEX_TASK_WEBSITE.md
+  codex_tasks.md
+  architecture/
   exec-plans/
 
 theme:
