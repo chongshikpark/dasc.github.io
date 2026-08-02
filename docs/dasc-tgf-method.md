@@ -4,30 +4,16 @@ The TGF section concerns the free-space electrostatic or quasistatic Poisson
 problem used by the DA–VGF line of work. It is separate from the causal cavity
 eigenmode formulation.
 
-## Free-space Poisson problem
+1. [Free-space Poisson problem](dasc-tgf-free-space-poisson.md)
+2. [TGF/Vico–Greengard–Ferrando formulation](dasc-tgf-formulation.md)
+3. [Field and kick construction](dasc-tgf-field-kick.md)
+4. [Verification and convergence](dasc-tgf-verification.md)
 
-The later derivation will state the source domain, open-boundary condition,
-Green-function convolution, frame, units, and regularity assumptions before
-introducing an FFT algorithm.
-
-## TGF/Vico–Greengard–Ferrando formulation
-
-This page boundary will explain physical-space kernel truncation, the geometric
-condition under which it preserves the required convolution, padding, spectral
-normalization, and aperiodic evaluation. Task 1 makes no convergence claim.
-
-## Field and kick construction
-
-The field, deposition/gathering operations, discrete interaction energy, force,
-and space-charge kick must be connected consistently. An accurate field solve
-alone does not make a particle map symplectic.
-
-## Verification and convergence
-
-Planned evidence includes analytical field checks, charge and sign checks,
-domain/grid/padding studies, force-energy consistency, DA derivative checks,
-and map diagnostics. Results will appear only with immutable configurations and
-acceptance criteria.
+!!! warning "Model boundary"
+    This method solves an open-boundary electrostatic problem in a declared
+    frame. Conducting cavities, causal reflections, and aperture coupling require
+    the [eigenmode formulation](dasc-eigenmode-method.md). An FFT does not turn
+    one boundary-value problem into the other.
 
 See the public DASC
 [DA–TGF source study](https://github.com/chongshikpark/dasc/blob/94033eae4d8eac81f4c42c41f6cfba69e1cd2a25/docs/differentiable_symplectic_space_charge_study.tex)

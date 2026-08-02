@@ -20,3 +20,36 @@ def test_undefined_equation_and_citation_keys_fail(tmp_path: Path) -> None:
     page.write_text("# Test\n\n[missing](#eq-missing) and citation[^missing].\n")
     with pytest.raises(ValueError):
         validate(tmp_path)
+
+
+def test_tgf_derivation_is_explicitly_navigated() -> None:
+    config = (ROOT / "mkdocs.yml").read_text()
+    for page in (
+        "dasc-tgf-free-space-poisson.md",
+        "dasc-tgf-formulation.md",
+        "dasc-tgf-field-kick.md",
+        "dasc-tgf-verification.md",
+    ):
+        assert page in config
+
+    equations = "\n".join(
+        (ROOT / "docs" / page).read_text()
+        for page in (
+            "dasc-tgf-free-space-poisson.md",
+            "dasc-tgf-formulation.md",
+            "dasc-tgf-field-kick.md",
+            "dasc-tgf-verification.md",
+        )
+    )
+    for equation_id in (
+        "eq-tgf-poisson",
+        "eq-tgf-green-convolution",
+        "eq-tgf-cutoff-condition",
+        "eq-tgf-spectrum",
+        "eq-tgf-direct-field",
+        "eq-tgf-discrete-energy",
+        "eq-tgf-energy-force",
+        "eq-tgf-kick",
+        "eq-tgf-relative-l2",
+    ):
+        assert f'id="{equation_id}"' in equations

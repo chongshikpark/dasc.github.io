@@ -80,7 +80,12 @@ nav:
           - Potentials, fields, and particle dynamics: dasc-potentials-fields-dynamics.md
           - Approximations and validity limits: dasc-validity-limits.md
       - Differential-algebra methods: dasc-differential-algebra-methods.md
-      - Truncated Green's-function method: dasc-tgf-method.md
+      - Truncated Green's-function method:
+          - Overview: dasc-tgf-method.md
+          - Free-space Poisson problem: dasc-tgf-free-space-poisson.md
+          - TGF/VGF formulation: dasc-tgf-formulation.md
+          - Fields, particle forces, and kicks: dasc-tgf-field-kick.md
+          - Verification and convergence: dasc-tgf-verification.md
       - Eigenmode method: dasc-eigenmode-method.md
       - Comparison and method selection: dasc-method-selection.md
       - Reproducibility: dasc-reproducibility.md
