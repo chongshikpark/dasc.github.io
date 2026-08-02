@@ -20,7 +20,7 @@ The portal contains hand-written landing and project-selection pages plus a revi
 
 No upstream repository is mounted as a writable dependency, no upstream code is executed, and no unlisted file is published.
 
-## Planned repository layout
+## Repository layout
 
 ```text
 .
@@ -65,6 +65,10 @@ sources:
 ```
 
 Adding a manifest entry is a publication decision. Confirm that the file is intentionally public, properly licensed, free of secrets and private links, and suitable for the portal. Wildcards and directory-wide copying are intentionally unsupported.
+
+The generated `docs/pydasc/` and `docs/dasc/` directories are intentionally ignored by Git and created in CI. The collector first validates the complete manifest, fetches only its exact commits, verifies path containment and file types, and then replaces only those two generated namespaces from a temporary staging tree. Repeated runs are covered by a byte-for-byte determinism test.
+
+Relative links to allowlisted files are relocated within the portal. Links to existing but unlisted upstream documents are rewritten to immutable GitHub URLs at the same commit; missing or unsafe targets fail collection. Images must be explicitly allowlisted, and arbitrary remote content is never downloaded.
 
 ## MkDocs configuration
 
@@ -138,6 +142,8 @@ Open `http://127.0.0.1:8000/`. For the deployment-equivalent check, run:
 
 ```bash
 python -m pytest
+python scripts/collect_docs.py --manifest docs-manifest.yml --output docs
+python scripts/validate_docs.py --manifest docs-manifest.yml --docs docs
 mkdocs build --strict
 ```
 
@@ -196,4 +202,3 @@ See `AGENTS.md` for contributor and automation rules and `CODEX_TASK_WEBSITE.md`
 ## License and attribution
 
 The website's own license should be declared in this repository. Imported files retain their upstream copyright and license terms. Each generated document should identify its source repository, source path, and exact commit. Do not assume that public visibility alone grants republication rights.
-

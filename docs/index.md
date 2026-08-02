@@ -1,0 +1,30 @@
+# DASC documentation
+
+DASC is a scientific software ecosystem for working with data assimilation and related workflows. This portal brings the public documentation for its two projects into one consistent, searchable site while keeping each upstream repository authoritative.
+
+## Choose the right project
+
+<div class="grid cards" markdown>
+
+-   :fontawesome-brands-python:{ .lg .middle } **PyDASC**
+
+    ---
+
+    Start here when you want the Python-facing project and its usage documentation.
+
+    [Open PyDASC documentation](pydasc/index.md)
+
+-   :material-console:{ .lg .middle } **DASC**
+
+    ---
+
+    Start here for the DASC project, its installation notes, and command-line workflows.
+
+    [Open DASC documentation](dasc/index.md)
+
+</div>
+
+!!! info "Documentation provenance"
+    Imported pages are copied only from an explicit publication manifest at reviewed commit SHAs. Each page identifies its exact upstream source. The authoritative code and issue trackers remain in the [PyDASC repository](https://github.com/chongshikpark/pydasc) and [DASC repository](https://github.com/chongshikpark/dasc).
+
+[Compare the projects](getting-started.md){ .md-button .md-button--primary }

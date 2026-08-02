@@ -1,0 +1,14 @@
+schema_version: 1
+sources:
+  pydasc:
+    repository: chongshikpark/pydasc
+    ref: dab60df7f8d1cc5f0338fbe1c3885c6624af1a33
+    files:
+      - source: README.md
+        destination: pydasc/index.md
+  dasc:
+    repository: chongshikpark/dasc
+    ref: dbb3aebfc6f594b11b3086c2e3f6b9da31d15881
+    files:
+      - source: README.md
+        destination: dasc/index.md

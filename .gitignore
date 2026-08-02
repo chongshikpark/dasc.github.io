@@ -56,3 +56,9 @@ tmp
 
 CODEX_TASK_WEBSITE.md
 
+# Generated documentation and build output
+docs/pydasc/
+docs/dasc/
+site/
+.pytest_cache/
+.venv/
