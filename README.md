@@ -154,6 +154,20 @@ mkdocs build --strict
 
 The two source paths must be local checkouts whose `HEAD` commits exactly match `docs-manifest.yml`. Assembly validates each checkout's `docs/publication-manifest.json`, reads approved Git objects and regular files only, never installs or executes source code, and writes a checksummed `docs/generated-inventory.json` excluded from the public site.
 
+## API documentation and executable content
+
+The current release is static. PyDASC's allowlisted `docs/PUBLIC_API.md` is an
+authored public-interface policy page, not generated API output. Neither reviewed
+source contract approves generated API documentation, notebooks, or executable
+examples, so the website does not install either source package or provide a
+notebook/API execution pipeline.
+
+Links from approved pages to unlisted upstream notebooks or examples are rewritten
+to immutable GitHub URLs at the reviewed commit. Those targets are not copied,
+rendered, executed, or included in the publication inventory. See the internal
+decision record in `docs/architecture/api-and-examples-decision.md` for the
+requirements that a future, explicitly reviewed approval must satisfy.
+
 ## Updating imported documentation
 
 1. Choose a reviewed commit from `chongshikpark/pydasc` or `chongshikpark/dasc`.

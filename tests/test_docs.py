@@ -36,3 +36,11 @@ def test_broken_link_and_credential_rejected(tmp_path):
 def test_unknown_output_and_checksum_rejected(tmp_path):
  m,p,d=fixture(tmp_path);out=tmp_path/"out";assemble(m,out,p,d);(out/"dasc/extra.md").write_text("x")
  with pytest.raises(CollectionError,match="boundary"):validate(m,out)
+
+def test_release_keeps_api_and_examples_static():
+ root=Path(__file__).parents[1];data=yaml.safe_load((root/"docs-manifest.yml").read_text());selected=[entry["source"] for source in data["sources"].values() for entry in source["files"]]
+ assert "docs/PUBLIC_API.md" in selected
+ assert all(not path.casefold().endswith(".ipynb") for path in selected)
+ assert all(not any(part.casefold() in {"examples","notebooks"} for part in Path(path).parts) for path in selected)
+ requirements=(root/"requirements-docs.txt").read_text().casefold()
+ assert all(tool not in requirements for tool in ("jupyter","nbconvert","mkdocstrings","pydoc"))
