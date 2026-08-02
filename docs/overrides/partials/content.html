@@ -1,0 +1,24 @@
+{% if not page.is_homepage %}
+  <nav class="md-path" aria-label="Breadcrumb">
+    <ol class="md-path__list">
+      <li class="md-path__item">
+        <a class="md-path__link" href="{{ nav.homepage.url | url }}">Home</a>
+      </li>
+      {% for ancestor in page.ancestors | reverse %}
+        {% if ancestor.url and not ancestor.is_homepage %}
+          <li class="md-path__item">
+            <a class="md-path__link" href="{{ ancestor.url | url }}">{{ ancestor.title }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+      <li class="md-path__item" aria-current="page">{{ page.title }}</li>
+    </ol>
+  </nav>
+{% endif %}
+{% include "partials/tags.html" %}
+{% include "partials/actions.html" %}
+{% if "\x3ch1" not in page.content %}<h1>{{ page.title | d(config.site_name, true) }}</h1>{% endif %}
+{{ page.content }}
+{% include "partials/source-file.html" %}
+{% include "partials/feedback.html" %}
+{% include "partials/comments.html" %}

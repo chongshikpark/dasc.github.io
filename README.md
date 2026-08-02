@@ -125,6 +125,23 @@ nav:
 
 Expand `nav` explicitly as documents are approved. Material for MkDocs and all plugins must be version-pinned in `requirements-docs.txt`.
 
+### Presentation
+
+The portal uses a repository-owned, classic documentation theme adaptation in
+`docs/stylesheets/readthedocs.css`. It retains Material for MkDocs behavior while
+providing a fixed 300 px desktop navigation rail, bounded reading column,
+breadcrumb trail, responsive drawer, print rules, and reduced-motion support.
+The implementation uses local/system font fallbacks and does not download fonts,
+styles, branding, advertising, analytics, or assets from Read the Docs or another
+documentation project.
+
+After building, validate subpath-safe links and presentation assets with:
+
+```bash
+python scripts/validate_site.py --site site \
+  --css docs/stylesheets/readthedocs.css
+```
+
 ## Local preview
 
 Python 3.11 or newer and Git are recommended.

@@ -8,38 +8,34 @@ docs_dir: docs
 site_dir: site
 exclude_docs: |
   CODEX_TASK_WEBSITE.md
+  CODEX_TASK_READTHEDOCS_STYLE.md
   codex_tasks.md
   architecture/
   exec-plans/
   operations/
+  overrides/
   generated-inventory.json
 
 extra_css:
-  - assets/stylesheets/extra.css
+  - stylesheets/readthedocs.css
+
+extra_javascript:
+  - javascripts/navigation.js
 
 theme:
   name: material
   custom_dir: docs/overrides
   language: en
+  font: false
   palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
-      primary: indigo
-      accent: deep purple
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: indigo
-      accent: amber
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
+    scheme: default
+    primary: blue
+    accent: blue
   features:
-    - navigation.tabs
     - navigation.sections
     - navigation.indexes
+    - navigation.path
+    - navigation.footer
     - navigation.top
     - navigation.tracking
     - search.highlight

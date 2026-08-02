@@ -110,6 +110,9 @@ jobs:
       - name: Build strict site
         run: mkdocs build --strict
 
+      - name: Validate site links and presentation assets
+        run: python scripts/validate_site.py --site site --css docs/stylesheets/readthedocs.css
+
       - name: Scan complete site artifact
         shell: bash
         run: |

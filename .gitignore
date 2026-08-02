@@ -62,7 +62,8 @@ MANIFEST
 *.pem
 
 CODEX_TASK_WEBSITE.md
-docs/codex_tasks.md
+codex_tasks.md
+CODEX_TASK_READTHEDOCS_STYLE.md
 
 # Generated documentation and build output
 docs/pydasc/
