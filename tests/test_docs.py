@@ -5,6 +5,7 @@ import pytest, yaml
 sys.path.insert(0,str(Path(__file__).parents[1]/"scripts"))
 from collect_docs import CollectionError, assemble, load_manifest
 from validate_docs import validate
+from update_source_locks import update as update_source_locks
 
 def git(repo:Path,*args:str)->str:return subprocess.run(["git",*args],cwd=repo,check=True,capture_output=True,text=True).stdout.strip()
 def repo(root:Path,name:str,text:str)->tuple[Path,str]:
@@ -26,6 +27,14 @@ def test_deterministic_inventory_validation_and_source_immutability(tmp_path):
 def test_commit_mismatch_rejected(tmp_path):
  m,p,d=fixture(tmp_path);data=yaml.safe_load(m.read_text());data["sources"]["pydasc"]["checkout_commit"]="a"*40;m.write_text(yaml.safe_dump(data));
  with pytest.raises(CollectionError,match="commit mismatch"):assemble(m,tmp_path/"out",p,d)
+
+def test_source_lock_update_validates_candidate_and_changes_only_commit(tmp_path):
+ m,p,d=fixture(tmp_path);before=yaml.safe_load(m.read_text());(p/"CHANGELOG.md").write_text("candidate\n");git(p,"add","CHANGELOG.md");git(p,"commit","-qm","candidate")
+ changes=update_source_locks(m,{"pydasc":p,"dasc":d});after=yaml.safe_load(m.read_text())
+ assert changes=={"pydasc":(before["sources"]["pydasc"]["checkout_commit"],git(p,"rev-parse","HEAD"))}
+ assert after["sources"]["pydasc"]["checkout_commit"]==git(p,"rev-parse","HEAD")
+ before["sources"]["pydasc"]["checkout_commit"]=git(p,"rev-parse","HEAD")
+ assert after==before
 @pytest.mark.parametrize("value",["/README.md","../README.md","*.md","secret.env"])
 def test_unsafe_selection_rejected(tmp_path,value):
  m,p,d=fixture(tmp_path);data=yaml.safe_load(m.read_text());data["sources"]["pydasc"]["files"][0]["source"]=value;m.write_text(yaml.safe_dump(data));

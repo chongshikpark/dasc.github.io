@@ -219,6 +219,20 @@ deploys an artifact.
 - upload `site/` with the official Pages artifact action;
 - deploy with the official Pages deployment action in the `github-pages` environment.
 
+`update-source-locks.yml` runs weekly and by manual dispatch. It anonymously
+clones each fixed upstream repository, fetches the exact content commit declared
+by its candidate publication contract, and validates the complete candidate
+before changing only `checkout_commit` values in `docs-manifest.yml`. A changed
+candidate must pass tests, deterministic assembly, publication validation, the
+strict build, link and accessibility checks, and the complete artifact scan.
+Only then does the workflow create a branch and pull request. It never edits an
+upstream repository, changes the file allowlist, merges, or deploys.
+
+The repository setting **Actions → General → Workflow permissions → Allow GitHub
+Actions to create and approve pull requests** must permit pull-request creation.
+Approval remains a human publication decision: review the immutable commits and
+content diff before merging an automated proposal.
+
 Use these workflow permissions and concurrency controls:
 
 ```yaml
