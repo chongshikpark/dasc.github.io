@@ -10,10 +10,16 @@ exclude_docs: |
   CODEX_TASK_WEBSITE.md
   codex_tasks.md
   architecture/
+  dasc/
   exec-plans/
+  pydasc/
+
+extra_css:
+  - assets/stylesheets/extra.css
 
 theme:
   name: material
+  custom_dir: docs/overrides
   language: en
   palette:
     - media: "(prefers-color-scheme: light)"
@@ -62,7 +68,7 @@ nav:
   - Home: index.md
   - Choose a project: getting-started.md
   - PyDASC:
-      - Overview: pydasc/index.md
+      - Overview: pydasc.md
   - DASC:
-      - Overview: dasc/index.md
+      - Overview: dasc.md
   - Contribute: contributing.md

@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+
+{% block content %}
+  <h1>Page not found</h1>
+  <p>
+    The requested documentation page does not exist in this reviewed site
+    snapshot, or it has not been approved for publication.
+  </p>
+  <ul>
+    <li><a href="{{ config.site_url }}">Return to the documentation home</a></li>
+    <li>
+      <a href="{{ config.site_url }}getting-started/">
+        Choose between PyDASC and DASC
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/chongshikpark/dasc.github.io/issues">
+        Report a portal issue
+      </a>
+    </li>
+  </ul>
+{% endblock %}

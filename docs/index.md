@@ -12,7 +12,7 @@ DASC is a scientific software ecosystem for working with data assimilation and r
 
     Start here when you want the Python-facing project and its usage documentation.
 
-    [Open PyDASC documentation](pydasc/index.md)
+    [Open the PyDASC section](pydasc.md)
 
 -   :material-console:{ .lg .middle } **DASC**
 
@@ -20,7 +20,7 @@ DASC is a scientific software ecosystem for working with data assimilation and r
 
     Start here for the DASC project, its installation notes, and command-line workflows.
 
-    [Open DASC documentation](dasc/index.md)
+    [Open the DASC section](dasc.md)
 
 </div>
 

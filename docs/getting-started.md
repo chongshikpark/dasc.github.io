@@ -4,12 +4,17 @@ The two projects share a documentation home but have separate source repositorie
 
 ## PyDASC
 
-Use the [PyDASC overview](pydasc/index.md) for the Python project. Its authoritative source, releases, and issue tracker are at [chongshikpark/pydasc](https://github.com/chongshikpark/pydasc).
+Use the [PyDASC section](pydasc.md) for the Python project. Its authoritative source, releases, and issue tracker are at [chongshikpark/pydasc](https://github.com/chongshikpark/pydasc).
 
 ## DASC
 
-Use the [DASC overview](dasc/index.md) for the DASC project. Its authoritative source, releases, and issue tracker are at [chongshikpark/dasc](https://github.com/chongshikpark/dasc).
+Use the [DASC section](dasc.md) for the paper-development and research repository. Its authoritative source and issue tracker are at [chongshikpark/dasc](https://github.com/chongshikpark/dasc).
+
+```text
+Python package documentation          → PyDASC
+Paper-development repository overview → DASC
+```
 
 ## Before installing
 
-Read the selected project's imported overview and then verify current installation and compatibility details in its upstream repository. This portal republishes reviewed documentation snapshots; it does not replace upstream release notes.
+During this scaffold stage, verify current installation, compatibility, and release details directly in the selected upstream repository. Imported documentation is added only by a later reviewed assembly step.

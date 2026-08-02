@@ -133,12 +133,16 @@ Python 3.11 or newer and Git are recommended.
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install --requirement requirements-docs.txt
-python scripts/collect_docs.py --manifest docs-manifest.yml --output docs
-python scripts/validate_docs.py --manifest docs-manifest.yml --docs docs
 mkdocs serve
 ```
 
-Open `http://127.0.0.1:8000/`. For the deployment-equivalent check, run:
+Open `http://127.0.0.1:8000/`. This builds the hand-written scaffold only and does not fetch either source repository. For its strict check, run:
+
+```bash
+mkdocs build --strict
+```
+
+After the deterministic source-assembly task is reviewed, the complete local sequence is:
 
 ```bash
 python -m pytest
