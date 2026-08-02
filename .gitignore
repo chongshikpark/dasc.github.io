@@ -52,9 +52,17 @@ MANIFEST
 # Temporary files
 ##########################################
 .*.swp
-tmp
+/tmp/
+/.docs-staging/
+/.source-checkouts/
+/.env
+/.env.*
+!/.env.example
+/credentials/
+*.pem
 
 CODEX_TASK_WEBSITE.md
+docs/codex_tasks.md
 
 # Generated documentation and build output
 docs/pydasc/
@@ -62,3 +70,4 @@ docs/dasc/
 site/
 .pytest_cache/
 .venv/
+

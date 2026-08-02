@@ -197,7 +197,7 @@ Pin every action to a reviewed commit SHA. Configure the repository's **Settings
 - Deployment uses GitHub's short-lived OIDC credentials and minimal permissions.
 - A strict build, link checks, and tests must pass before upload.
 
-See `AGENTS.md` for contributor and automation rules and `CODEX_TASK_WEBSITE.md` for the implementation specification.
+See [AGENTS.md](AGENTS.md) for contributor and automation rules and [docs/codex_tasks.md](docs/codex_tasks.md) for the sequential implementation tasks.
 
 ## License and attribution
 
