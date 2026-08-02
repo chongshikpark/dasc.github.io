@@ -146,10 +146,13 @@ After the deterministic source-assembly task is reviewed, the complete local seq
 
 ```bash
 python -m pytest
-python scripts/collect_docs.py --manifest docs-manifest.yml --output docs
+python scripts/collect_docs.py --manifest docs-manifest.yml --output docs \
+  --pydasc /path/to/pydasc --dasc /path/to/dasc
 python scripts/validate_docs.py --manifest docs-manifest.yml --docs docs
 mkdocs build --strict
 ```
+
+The two source paths must be local checkouts whose `HEAD` commits exactly match `docs-manifest.yml`. Assembly validates each checkout's `docs/publication-manifest.json`, reads approved Git objects and regular files only, never installs or executes source code, and writes a checksummed `docs/generated-inventory.json` excluded from the public site.
 
 ## Updating imported documentation
 

@@ -67,7 +67,7 @@ docs/codex_tasks.md
 # Generated documentation and build output
 docs/pydasc/
 docs/dasc/
+docs/generated-inventory.json
 site/
 .pytest_cache/
 .venv/
-

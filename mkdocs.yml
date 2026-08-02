@@ -10,9 +10,8 @@ exclude_docs: |
   CODEX_TASK_WEBSITE.md
   codex_tasks.md
   architecture/
-  dasc/
   exec-plans/
-  pydasc/
+  generated-inventory.json
 
 extra_css:
   - assets/stylesheets/extra.css
@@ -68,7 +67,12 @@ nav:
   - Home: index.md
   - Choose a project: getting-started.md
   - PyDASC:
-      - Overview: pydasc.md
+      - Overview: pydasc/index.md
+      - Guides:
+          - Simulation workflow: pydasc/guides/simulation-workflow.md
+      - Reference:
+          - Public API policy: pydasc/reference/public-api.md
+          - Conventions: pydasc/reference/conventions.md
   - DASC:
-      - Overview: dasc.md
+      - Overview: dasc/index.md
   - Contribute: contributing.md

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Collect an explicit, immutable allowlist of upstream documentation."""
+"""Assemble approved documentation from exact local source checkouts."""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import os
 import re
 import shutil
@@ -13,18 +15,21 @@ import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
+from typing import Any
 from urllib.parse import unquote, urlsplit
 
 import yaml
 
 EXPECTED = {
-    "pydasc": "chongshikpark/pydasc",
-    "dasc": "chongshikpark/dasc",
+    "pydasc": "https://github.com/chongshikpark/pydasc",
+    "dasc": "https://github.com/chongshikpark/dasc",
 }
-ALLOWED_EXTENSIONS = {".md", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".webp"}
+ALLOWED = {".md", ".png", ".jpg", ".jpeg", ".svg", ".webp"}
+MEDIA = {".md": "text/markdown", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".svg": "image/svg+xml", ".webp": "image/webp"}
 MAX_FILE_BYTES = 5 * 1024 * 1024
 SHA_RE = re.compile(r"^[0-9a-f]{40}$")
 LINK_RE = re.compile(r"(!?\[[^\]]*\])\(([^)\s]+)(?:\s+['\"][^)]*['\"])?\)")
+FORBIDDEN = re.compile(r"(?:-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|github_pat_[A-Za-z0-9_]+|ghp_[A-Za-z0-9]+|AKIA[0-9A-Z]{16}|/(?:Users|home)/[^\s)`]+|https?://(?:localhost|127\.0\.0\.1|[^/\s]+\.internal)(?:[/\s)]|$))")
 
 
 class CollectionError(ValueError):
@@ -35,92 +40,43 @@ class CollectionError(ValueError):
 class Entry:
     source_name: str
     repository: str
-    ref: str
+    checkout_commit: str
+    content_commit: str
     source: PurePosixPath
     destination: PurePosixPath
+    status: str
+    license_id: str
 
 
-def _strict_keys(value: object, expected: set[str], context: str) -> dict:
-    if not isinstance(value, dict):
-        raise CollectionError(f"{context} must be a mapping")
-    unknown = set(value) - expected
-    missing = expected - set(value)
-    if unknown or missing:
-        raise CollectionError(f"{context} keys invalid (missing={sorted(missing)}, unknown={sorted(unknown)})")
+def _mapping(value: object, keys: set[str], context: str) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != keys:
+        actual = set(value) if isinstance(value, dict) else set()
+        raise CollectionError(f"{context} keys invalid (missing={sorted(keys-actual)}, unknown={sorted(actual-keys)})")
     return value
 
 
-def _safe_relative(value: object, label: str) -> PurePosixPath:
+def _path(value: object, context: str) -> PurePosixPath:
     if not isinstance(value, str) or not value or "\0" in value or "\\" in value:
-        raise CollectionError(f"{label} must be a non-empty POSIX path")
-    path = PurePosixPath(value)
-    if path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts):
-        raise CollectionError(f"unsafe {label}: {value!r}")
-    if any(char in value for char in "*?["):
-        raise CollectionError(f"globs are forbidden in {label}: {value!r}")
-    return path
+        raise CollectionError(f"{context} must be a non-empty POSIX path")
+    result = PurePosixPath(value)
+    if result.is_absolute() or any(part in {"", ".", ".."} for part in result.parts) or any(c in value for c in "*?["):
+        raise CollectionError(f"unsafe {context}: {value!r}")
+    return result
 
 
-def load_manifest(path: Path) -> list[Entry]:
+def _read_yaml(path: Path) -> dict[str, Any]:
     try:
-        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, yaml.YAMLError) as exc:
-        raise CollectionError(f"cannot read manifest: {exc}") from exc
-    root = _strict_keys(raw, {"schema_version", "sources"}, "manifest")
-    if root["schema_version"] != 1:
-        raise CollectionError("unsupported schema_version; expected 1")
-    sources = root["sources"]
-    if not isinstance(sources, dict) or set(sources) != set(EXPECTED):
-        raise CollectionError("sources must contain exactly 'pydasc' and 'dasc'")
-    entries: list[Entry] = []
-    destinations: set[str] = set()
-    for name, expected_repo in EXPECTED.items():
-        source = _strict_keys(sources[name], {"repository", "ref", "files"}, f"source {name}")
-        if source["repository"] != expected_repo:
-            raise CollectionError(f"repository for {name} must be {expected_repo}")
-        if not isinstance(source["ref"], str) or not SHA_RE.fullmatch(source["ref"]):
-            raise CollectionError(f"ref for {name} must be a lowercase 40-character commit SHA")
-        if not isinstance(source["files"], list) or not source["files"]:
-            raise CollectionError(f"files for {name} must be a non-empty list")
-        for index, item in enumerate(source["files"]):
-            item = _strict_keys(item, {"source", "destination"}, f"{name}.files[{index}]")
-            src = _safe_relative(item["source"], "source path")
-            dest = _safe_relative(item["destination"], "destination path")
-            if not dest.parts or dest.parts[0] != name:
-                raise CollectionError(f"destination must be below {name}/")
-            if src.suffix.lower() not in ALLOWED_EXTENSIONS or dest.suffix.lower() not in ALLOWED_EXTENSIONS:
-                raise CollectionError(f"unapproved extension for {src} -> {dest}")
-            if src.suffix.lower() != dest.suffix.lower():
-                raise CollectionError(f"source and destination extensions differ: {src} -> {dest}")
-            folded = dest.as_posix().casefold()
-            if folded in destinations:
-                raise CollectionError(f"duplicate destination: {dest}")
-            destinations.add(folded)
-            entries.append(Entry(name, expected_repo, source["ref"], src, dest))
-    return entries
+        raise CollectionError(f"cannot read website manifest: {exc}") from exc
 
 
-def _run_git(args: list[str], cwd: Path | None = None) -> None:
-    # Keep administrator-provided transport/proxy configuration, but never allow
-    # credential prompts or repository hooks from fetched content.
-    env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+def _git(repo: Path, *args: str, binary: bool = False) -> str | bytes:
     try:
-        subprocess.run(["git", "-c", "core.hooksPath=/dev/null", *args], cwd=cwd, env=env,
-                       check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        result = subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=not binary)
     except (OSError, subprocess.CalledProcessError) as exc:
-        detail = exc.stderr.strip() if isinstance(exc, subprocess.CalledProcessError) else str(exc)
-        raise CollectionError(f"git operation failed: {detail}") from exc
-
-
-def _fetch(repository: str, ref: str, target: Path, repo_overrides: dict[str, Path] | None) -> None:
-    remote = str(repo_overrides[repository]) if repo_overrides and repository in repo_overrides else f"https://github.com/{repository}.git"
-    _run_git(["init", "--quiet", str(target)])
-    _run_git(["remote", "add", "origin", remote], target)
-    _run_git(["fetch", "--quiet", "--depth=1", "origin", ref], target)
-    _run_git(["checkout", "--quiet", "--detach", "FETCH_HEAD"], target)
-    result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=target, check=True, capture_output=True, text=True)
-    if result.stdout.strip() != ref:
-        raise CollectionError(f"fetched commit does not match requested ref for {repository}")
+        raise CollectionError(f"git inspection failed in {repo.name}") from exc
+    return result.stdout
 
 
 def _inside(path: Path, root: Path) -> bool:
@@ -131,29 +87,89 @@ def _inside(path: Path, root: Path) -> bool:
         return False
 
 
-def _resolve_files(entries: list[Entry], checkouts: dict[str, Path]) -> dict[Entry, Path]:
-    resolved: dict[Entry, Path] = {}
-    for entry in entries:
-        root = checkouts[entry.source_name].resolve()
-        candidate = root.joinpath(*entry.source.parts)
-        if candidate.is_symlink():
-            raise CollectionError(f"symlink source is forbidden: {entry.source}")
-        real = candidate.resolve(strict=False)
-        if not _inside(real, root):
-            raise CollectionError(f"source escapes checkout: {entry.source}")
-        try:
-            mode = candidate.stat(follow_symlinks=False).st_mode
-        except FileNotFoundError as exc:
-            raise CollectionError(f"source file is missing: {entry.source}") from exc
-        if not stat.S_ISREG(mode):
-            raise CollectionError(f"source is not a regular file: {entry.source}")
-        if candidate.stat().st_size > MAX_FILE_BYTES:
-            raise CollectionError(f"source exceeds {MAX_FILE_BYTES} bytes: {entry.source}")
-        resolved[entry] = candidate
-    return resolved
+def _source_contract(path: Path, name: str, repository: str, checkout: str) -> tuple[str, dict[str, dict[str, Any]]]:
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise CollectionError(f"cannot read {name} publication manifest: {exc}") from exc
+    root_keys = {"schema_version", "project", "repository", "source_commit", "files"}
+    if name == "dasc":
+        root_keys.add("publication_decision")
+    root = _mapping(raw, root_keys, f"{name} publication manifest")
+    if root["schema_version"] != 1 or root["project"] != name or root["repository"] != repository:
+        raise CollectionError(f"invalid {name} publication identity/schema")
+    content = root["source_commit"]
+    if not isinstance(content, str) or not SHA_RE.fullmatch(content):
+        raise CollectionError(f"invalid {name} source_commit")
+    if name == "dasc":
+        decision = _mapping(root["publication_decision"], {"state", "reason", "evidence"}, "dasc decision")
+        if decision["state"] != "approved":
+            raise CollectionError("DASC publication decision is not approved")
+    if _git(path.parents[1], "rev-parse", "HEAD").strip() != checkout:
+        raise CollectionError(f"{name} checkout commit mismatch")
+    approved: dict[str, dict[str, Any]] = {}
+    if not isinstance(root["files"], list):
+        raise CollectionError(f"{name} files must be a list")
+    for index, item in enumerate(root["files"]):
+        item = _mapping(item, {"source", "destination", "media_type", "documentation_status", "redistribution"}, f"{name}.files[{index}]")
+        source = _path(item["source"], "source")
+        destination = _path(item["destination"], "destination")
+        if destination.parts[0] != name or source.suffix.lower() not in ALLOWED or item["media_type"] != MEDIA[source.suffix.lower()]:
+            raise CollectionError(f"invalid approved file: {source}")
+        status = _mapping(item["documentation_status"], {"label", "evidence"}, "status")
+        if not isinstance(status["label"], str) or not isinstance(status["evidence"], str) or not status["evidence"].strip():
+            raise CollectionError(f"invalid status for {source}")
+        rights_keys = {"spdx_license", "license_file"} | ({"attribution"} if name == "dasc" else set())
+        rights = _mapping(item["redistribution"], rights_keys, "redistribution")
+        license_path = _path(rights["license_file"], "license_file")
+        license_bytes = _git(path.parents[1], "show", f"{content}:{license_path.as_posix()}", binary=True)
+        if not license_bytes:
+            raise CollectionError(f"missing license at approved commit for {source}")
+        approved[source.as_posix()] = {**item, "_destination": destination, "_status": status["label"], "_license": rights["spdx_license"]}
+    return content, approved
 
 
-def _rewrite_markdown(text: str, entry: Entry, by_source: dict[tuple[str, str], Entry], checkout: Path) -> str:
+def load_manifest(path: Path, checkouts: dict[str, Path] | None = None) -> list[Entry]:
+    root = _mapping(_read_yaml(path), {"schema_version", "sources"}, "website manifest")
+    if root["schema_version"] != 2 or not isinstance(root["sources"], dict) or set(root["sources"]) != set(EXPECTED):
+        raise CollectionError("website manifest must be schema 2 with exactly pydasc and dasc")
+    entries: list[Entry] = []
+    destinations: set[str] = set()
+    for name, repository in EXPECTED.items():
+        source = _mapping(root["sources"][name], {"repository", "checkout_commit", "publication_manifest", "files"}, f"source {name}")
+        checkout_commit = source["checkout_commit"]
+        if source["repository"] != repository or not isinstance(checkout_commit, str) or not SHA_RE.fullmatch(checkout_commit):
+            raise CollectionError(f"invalid lock identity/commit for {name}")
+        manifest_rel = _path(source["publication_manifest"], "publication_manifest")
+        if not isinstance(source["files"], list) or not source["files"]:
+            raise CollectionError(f"{name} lock files must be non-empty")
+        approved: dict[str, dict[str, Any]] = {}
+        content_commit = "0" * 40
+        if checkouts is not None:
+            checkout = checkouts[name].resolve()
+            contract = checkout.joinpath(*manifest_rel.parts)
+            if contract.is_symlink() or not _inside(contract.resolve(), checkout):
+                raise CollectionError(f"unsafe {name} publication manifest")
+            content_commit, approved = _source_contract(contract, name, repository, checkout_commit)
+        for index, selected in enumerate(source["files"]):
+            selected = _mapping(selected, {"source", "destination"}, f"{name}.files[{index}]")
+            src = _path(selected["source"], "source")
+            dest = _path(selected["destination"], "destination")
+            if dest.parts[0] != name or src.suffix.lower() not in ALLOWED or src.suffix.lower() != dest.suffix.lower():
+                raise CollectionError(f"invalid selected file {src} -> {dest}")
+            folded = dest.as_posix().casefold()
+            if folded in destinations:
+                raise CollectionError(f"duplicate destination: {dest}")
+            destinations.add(folded)
+            if checkouts is not None:
+                offer = approved.get(src.as_posix())
+                if offer is None or offer["_destination"] != dest:
+                    raise CollectionError(f"missing source approval: {src} -> {dest}")
+                entries.append(Entry(name, repository, checkout_commit, content_commit, src, dest, offer["_status"], offer["_license"]))
+    return entries
+
+
+def _rewrite(text: str, entry: Entry, selected: dict[tuple[str, str], Entry], checkout: Path) -> str:
     def replace(match: re.Match[str]) -> str:
         label, raw = match.groups()
         parsed = urlsplit(raw)
@@ -161,62 +177,75 @@ def _rewrite_markdown(text: str, entry: Entry, by_source: dict[tuple[str, str], 
             return match.group(0)
         if parsed.scheme or parsed.netloc or raw.startswith("/"):
             raise CollectionError(f"unsafe link {raw!r} in {entry.source}")
-        decoded = unquote(parsed.path)
-        target = entry.source.parent.joinpath(PurePosixPath(decoded))
-        normalized_parts: list[str] = []
-        for part in target.parts:
+        parts: list[str] = []
+        for part in entry.source.parent.joinpath(PurePosixPath(unquote(parsed.path))).parts:
             if part == "..":
-                if not normalized_parts:
-                    raise CollectionError(f"link escapes repository in {entry.source}: {raw}")
-                normalized_parts.pop()
+                if not parts:
+                    raise CollectionError(f"link escapes repository: {raw}")
+                parts.pop()
             elif part not in {"", "."}:
-                normalized_parts.append(part)
-        normalized = PurePosixPath(*normalized_parts).as_posix()
-        approved = by_source.get((entry.source_name, normalized))
-        if approved is not None:
-            relative = os.path.relpath(approved.destination.as_posix(), entry.destination.parent.as_posix()).replace(os.sep, "/")
+                parts.append(part)
+        normalized = PurePosixPath(*parts)
+        approved = selected.get((entry.source_name, normalized.as_posix()))
+        if approved:
+            target = os.path.relpath(approved.destination.as_posix(), entry.destination.parent.as_posix()).replace(os.sep, "/")
         else:
-            candidate = checkout.joinpath(*PurePosixPath(normalized).parts)
+            candidate = checkout.joinpath(*normalized.parts)
             if candidate.is_symlink() or not candidate.exists() or not _inside(candidate.resolve(), checkout.resolve()):
-                raise CollectionError(f"relative link target is missing or unsafe in {entry.source}: {raw}")
+                raise CollectionError(f"broken or unsafe relative link: {raw}")
             if label.startswith("!"):
-                raise CollectionError(f"image target is not allowlisted in {entry.source}: {raw}")
+                raise CollectionError(f"image is not approved: {raw}")
             kind = "tree" if candidate.is_dir() else "blob"
-            relative = f"https://github.com/{entry.repository}/{kind}/{entry.ref}/{normalized}"
-        suffix = f"?{parsed.query}" if parsed.query else ""
-        suffix += f"#{parsed.fragment}" if parsed.fragment else ""
-        return f"{label}({relative}{suffix})"
-
+            target = f"{entry.repository}/{kind}/{entry.content_commit}/{normalized.as_posix()}"
+        suffix = (f"?{parsed.query}" if parsed.query else "") + (f"#{parsed.fragment}" if parsed.fragment else "")
+        return f"{label}({target}{suffix})"
     return LINK_RE.sub(replace, text)
 
 
-def collect(manifest: Path, output: Path, repo_overrides: dict[str, Path] | None = None) -> None:
-    entries = load_manifest(manifest)  # Validate fully before fetching or writing.
-    output = output.resolve()
-    by_source = {(e.source_name, e.source.as_posix()): e for e in entries}
-    with tempfile.TemporaryDirectory(prefix="dasc-docs-") as temp_name:
-        temp = Path(temp_name)
-        checkouts: dict[str, Path] = {}
-        for name in EXPECTED:
-            checkout = temp / f"checkout-{name}"
-            sample = next(e for e in entries if e.source_name == name)
-            _fetch(sample.repository, sample.ref, checkout, repo_overrides)
-            checkouts[name] = checkout
-        files = _resolve_files(entries, checkouts)
-        stage = temp / "stage"
-        for entry, source_file in files.items():
+def _tree_state(repo: Path) -> tuple[str, tuple[tuple[str, str], ...]]:
+    status = _git(repo, "status", "--porcelain=v1", "--untracked-files=all")
+    files = []
+    for raw in _git(repo, "ls-files", "-co", "--exclude-standard").splitlines():
+        path = repo / raw
+        if path.is_file() and not path.is_symlink():
+            files.append((raw, hashlib.sha256(path.read_bytes()).hexdigest()))
+    return status, tuple(files)
+
+
+def assemble(manifest: Path, output: Path, pydasc: Path, dasc: Path) -> list[dict[str, Any]]:
+    checkouts = {"pydasc": pydasc.resolve(), "dasc": dasc.resolve()}
+    before = {name: _tree_state(repo) for name, repo in checkouts.items()}
+    entries = load_manifest(manifest, checkouts)
+    selected = {(entry.source_name, entry.source.as_posix()): entry for entry in entries}
+    inventory: list[dict[str, Any]] = []
+    with tempfile.TemporaryDirectory(prefix="dasc-assembly-") as temporary:
+        stage = Path(temporary) / "docs"
+        for entry in entries:
+            root = checkouts[entry.source_name]
+            source = root.joinpath(*entry.source.parts)
+            if source.is_symlink() or not _inside(source.resolve(strict=False), root) or not source.is_file():
+                raise CollectionError(f"unsafe or missing source: {entry.source}")
+            if source.stat().st_size > MAX_FILE_BYTES:
+                raise CollectionError(f"oversized source: {entry.source}")
+            committed = _git(root, "show", f"{entry.content_commit}:{entry.source.as_posix()}", binary=True)
+            if source.read_bytes() != committed:
+                raise CollectionError(f"source differs from approved commit: {entry.source}")
             destination = stage.joinpath(*entry.destination.parts)
             destination.parent.mkdir(parents=True, exist_ok=True)
-            data = source_file.read_bytes()
+            data = source.read_bytes()
             if entry.source.suffix.lower() == ".md":
                 try:
                     body = data.decode("utf-8").replace("\r\n", "\n").replace("\r", "\n")
                 except UnicodeDecodeError as exc:
-                    raise CollectionError(f"Markdown is not UTF-8: {entry.source}") from exc
-                body = _rewrite_markdown(body, entry, by_source, checkouts[entry.source_name])
-                banner = f"<!-- Generated from https://github.com/{entry.repository}/blob/{entry.ref}/{entry.source.as_posix()}; do not edit. -->\n\n"
-                data = (banner + body.rstrip() + "\n").encode("utf-8")
+                    raise CollectionError(f"non-UTF-8 Markdown: {entry.source}") from exc
+                if FORBIDDEN.search(body):
+                    raise CollectionError(f"credential-like or local content: {entry.source}")
+                body = _rewrite(body, entry, selected, root)
+                banner = f"<!-- Generated; source={entry.repository}/blob/{entry.content_commit}/{entry.source.as_posix()}; status={entry.status}; license={entry.license_id}; do not edit. -->\n\n"
+                data = (banner + body.rstrip() + "\n").encode()
             destination.write_bytes(data)
+            inventory.append({"destination": entry.destination.as_posix(), "sha256": hashlib.sha256(data).hexdigest(), "repository": entry.repository, "source": entry.source.as_posix(), "commit": entry.content_commit, "status": entry.status, "license": entry.license_id})
+        output = output.resolve()
         for name in EXPECTED:
             target = output / name
             if target.is_symlink() or (target.exists() and not target.is_dir()):
@@ -225,15 +254,23 @@ def collect(manifest: Path, output: Path, repo_overrides: dict[str, Path] | None
                 shutil.rmtree(target)
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copytree(stage / name, target)
+        inventory.sort(key=lambda item: item["destination"])
+        (output / "generated-inventory.json").write_text(json.dumps({"schema_version": 1, "files": inventory}, indent=2, sort_keys=True) + "\n")
+    after = {name: _tree_state(repo) for name, repo in checkouts.items()}
+    if before != after:
+        raise CollectionError("source checkout changed during assembly")
+    return inventory
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--pydasc", type=Path, required=True)
+    parser.add_argument("--dasc", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
-        collect(args.manifest, args.output)
+        assemble(args.manifest, args.output, args.pydasc, args.dasc)
     except CollectionError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1

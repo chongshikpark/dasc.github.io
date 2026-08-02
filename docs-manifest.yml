@@ -1,14 +1,22 @@
-schema_version: 1
+schema_version: 2
 sources:
   pydasc:
-    repository: chongshikpark/pydasc
-    ref: dab60df7f8d1cc5f0338fbe1c3885c6624af1a33
+    repository: https://github.com/chongshikpark/pydasc
+    checkout_commit: 0506b8a9feb75813ae979f0c1c25a307b21096d2
+    publication_manifest: docs/publication-manifest.json
     files:
       - source: README.md
         destination: pydasc/index.md
+      - source: docs/PUBLIC_API.md
+        destination: pydasc/reference/public-api.md
+      - source: docs/CONVENTIONS.md
+        destination: pydasc/reference/conventions.md
+      - source: docs/SIMULATION_WORKFLOW.md
+        destination: pydasc/guides/simulation-workflow.md
   dasc:
-    repository: chongshikpark/dasc
-    ref: dbb3aebfc6f594b11b3086c2e3f6b9da31d15881
+    repository: https://github.com/chongshikpark/dasc
+    checkout_commit: 94033eae4d8eac81f4c42c41f6cfba69e1cd2a25
+    publication_manifest: docs/publication-manifest.json
     files:
       - source: README.md
         destination: dasc/index.md
