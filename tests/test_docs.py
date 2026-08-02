@@ -57,3 +57,8 @@ def test_release_keeps_api_and_examples_static():
  assert all(not any(part.casefold() in {"examples","notebooks"} for part in Path(path).parts) for path in selected)
  requirements=(root/"requirements-docs.txt").read_text().casefold()
  assert all(tool not in requirements for tool in ("jupyter","nbconvert","mkdocstrings","pydoc"))
+
+def test_portal_enters_dasc_through_project_first_overview():
+ root=Path(__file__).parents[1]
+ assert "[Open the DASC documentation](dasc-project-overview.md)" in (root/"docs/index.md").read_text()
+ assert "[DASC project overview](dasc-project-overview.md)" in (root/"docs/getting-started.md").read_text()

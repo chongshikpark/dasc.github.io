@@ -36,6 +36,7 @@ theme:
     - navigation.sections
     - navigation.indexes
     - navigation.path
+    - navigation.footer
     - navigation.top
     - navigation.tracking
     - search.highlight
@@ -71,5 +72,14 @@ nav:
           - Public API policy: pydasc/reference/public-api.md
           - Conventions: pydasc/reference/conventions.md
   - DASC:
-      - Project overview: dasc/index.md
+      - Project overview: dasc-project-overview.md
+      - Physics foundations: dasc-physics-foundations.md
+      - Differential-algebra methods: dasc-differential-algebra-methods.md
+      - Truncated Green's-function method: dasc-tgf-method.md
+      - Eigenmode method: dasc-eigenmode-method.md
+      - Comparison and method selection: dasc-method-selection.md
+      - Reproducibility: dasc-reproducibility.md
+      - Research outputs and publications:
+          - Overview: dasc-research-outputs.md
+          - Reviewed source overview: dasc/index.md
   - Contribute: contributing.md

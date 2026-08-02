@@ -20,6 +20,14 @@ The portal contains hand-written landing and project-selection pages plus a revi
 
 No upstream repository is mounted as a writable dependency, no upstream code is executed, and no unlisted file is published.
 
+The hand-written DASC section is organized around the physics project rather
+than its planned papers: project overview, shared foundations, DA/TPSA and Lie
+methods, TGF and eigenmode formulations, method selection, reproducibility, and
+research outputs. These architecture pages summarize scope without copying the
+excluded upstream LaTeX derivations. The allowlisted upstream DASC README remains
+available under Research outputs and publications with its source provenance and
+status intact.
+
 ## Repository layout
 
 ```text
@@ -134,6 +142,11 @@ breadcrumb trail, responsive drawer, print rules, and reduced-motion support.
 The implementation uses local/system font fallbacks and does not download fonts,
 styles, branding, advertising, analytics, or assets from Read the Docs or another
 documentation project.
+
+Previous/next controls are filtered by the repository-owned footer override so
+they stay within the current portal, PyDASC, or DASC section. Cross-project
+movement remains available through the explicit left navigation and project
+chooser.
 
 After building, validate subpath-safe links and presentation assets with:
 

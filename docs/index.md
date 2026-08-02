@@ -20,7 +20,7 @@ DASC is concerned with differentiable, self-consistent space-charge modeling and
 
     Start here for the physics, derivation, analysis, reproducibility, and publication project built around the methods implemented in PyDASC.
 
-    [Open the DASC documentation](dasc/index.md)
+    [Open the DASC documentation](dasc-project-overview.md)
 
 </div>
 

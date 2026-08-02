@@ -8,7 +8,7 @@ Use the [PyDASC overview](pydasc/index.md) for the computational and numerical s
 
 ## DASC
 
-Use the [DASC project overview](dasc/index.md) for the physics, derivation, analysis, reproducibility, and publication project concerned with differentiable, self-consistent space-charge modeling. Its authoritative source and issue tracker are at [chongshikpark/dasc](https://github.com/chongshikpark/dasc).
+Use the [DASC project overview](dasc-project-overview.md) for the physics, derivation, analysis, reproducibility, and publication project concerned with differentiable, self-consistent space-charge modeling. Its authoritative source and issue tracker are at [chongshikpark/dasc](https://github.com/chongshikpark/dasc).
 
 ```text
 Computational and numerical software                       → PyDASC

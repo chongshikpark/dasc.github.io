@@ -21,10 +21,14 @@ def test_readthedocs_stylesheet_and_local_assets_are_configured() -> None:
     assert config["extra_javascript"] == ["javascripts/navigation.js"]
     assert config["theme"]["font"] is False
     assert "navigation.path" in config["theme"]["features"]
-    assert "navigation.footer" not in config["theme"]["features"]
+    assert "navigation.footer" in config["theme"]["features"]
     assert "navigation.tabs" not in config["theme"]["features"]
     assert "overrides/" in config["exclude_docs"].splitlines()
     assert "CODEX_TASKS_DASC_PHYSICS_DOCUMENTATION.md" in config["exclude_docs"].splitlines()
+    footer = (ROOT / "docs/overrides/partials/footer.html").read_text(encoding="utf-8")
+    assert 'current_group = "dasc"' in footer
+    assert "previous_group == current_group" in footer
+    assert "next_group == current_group" in footer
 
 
 def test_required_tokens_desktop_sidebar_and_bounded_content_exist() -> None:
