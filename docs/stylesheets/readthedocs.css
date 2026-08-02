@@ -138,6 +138,7 @@ a,
 }
 
 .md-content__inner {
+  counter-reset: dasc-equation;
   max-width: var(--dasc-content-max);
   margin-inline: auto;
   padding: 2.5rem 2.8rem 3.5rem;
@@ -236,10 +237,33 @@ a,
 
 .arithmatex,
 .MathJax,
-.katex-display {
+.katex-display,
+.dasc-equation {
   max-width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+.dasc-equation {
+  position: relative;
+  counter-increment: dasc-equation;
+  margin: 1.2rem 0;
+  padding: 0.7rem 3.5rem 0.7rem 0.9rem;
+  border-left: 3px solid var(--dasc-border);
+}
+
+.dasc-equation::after {
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  color: #5f6368;
+  content: "(" counter(dasc-equation) ")";
+  transform: translateY(-50%);
+}
+
+.dasc-equation math[display="block"] {
+  min-width: max-content;
+  margin: 0 auto;
 }
 
 .md-typeset img,
@@ -592,7 +616,8 @@ a,
 
   .md-typeset pre,
   .md-typeset table,
-  .md-typeset .admonition {
+  .md-typeset .admonition,
+  .dasc-equation {
     break-inside: avoid;
   }
 }

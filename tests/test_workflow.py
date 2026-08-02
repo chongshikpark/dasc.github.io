@@ -44,6 +44,7 @@ def test_docs_check_pins_actions_and_reproduces_local_build() -> None:
         "diff --recursive --no-dereference",
         "mkdocs build --strict",
         "scripts/validate_accessibility.py",
+        "scripts/validate_physics_docs.py",
     ):
         assert command in text
 
@@ -88,6 +89,7 @@ def test_pages_artifact_is_validated_scanned_and_sha_pinned() -> None:
     assert "persist-credentials: false" in text
     assert 'fetch --quiet --no-tags --depth=1 origin "$content_commit"' in text
     assert "scripts/validate_accessibility.py" in text
+    assert "scripts/validate_physics_docs.py" in text
     assert "enablement: false" in text
     assert re.search(r"actions/upload-pages-artifact@[0-9a-f]{40}[^\n]*\n\s+with:\n\s+path: site(?:\n|$)", text)
     assert "gh-pages" not in text
@@ -111,6 +113,7 @@ def test_source_update_workflow_proposes_validated_review_only_prs() -> None:
     assert "python -m pytest" in text
     assert "mkdocs build --strict" in text
     assert "scripts/validate_accessibility.py" in text
+    assert "scripts/validate_physics_docs.py" in text
     assert "gh pr create" in text
     assert "git push" in text
     assert "merge" not in text.casefold().replace("merging", "")

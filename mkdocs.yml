@@ -73,7 +73,12 @@ nav:
           - Conventions: pydasc/reference/conventions.md
   - DASC:
       - Project overview: dasc-project-overview.md
-      - Physics foundations: dasc-physics-foundations.md
+      - Physics foundations:
+          - Overview: dasc-physics-foundations.md
+          - Self-consistent space charge: dasc-self-consistent-space-charge.md
+          - Frames, coordinates, units, and conventions: dasc-conventions.md
+          - Potentials, fields, and particle dynamics: dasc-potentials-fields-dynamics.md
+          - Approximations and validity limits: dasc-validity-limits.md
       - Differential-algebra methods: dasc-differential-algebra-methods.md
       - Truncated Green's-function method: dasc-tgf-method.md
       - Eigenmode method: dasc-eigenmode-method.md

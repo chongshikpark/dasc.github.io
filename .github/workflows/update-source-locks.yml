@@ -101,6 +101,7 @@ jobs:
             --manifest docs-manifest.yml --output docs \
             --pydasc .source-checkouts/pydasc --dasc .source-checkouts/dasc
           python scripts/validate_docs.py --manifest docs-manifest.yml --docs docs
+          python scripts/validate_physics_docs.py --docs docs
           snapshot="$RUNNER_TEMP/assembled-docs"
           mkdir -p "$snapshot"
           cp -a docs/pydasc docs/dasc docs/generated-inventory.json "$snapshot/"

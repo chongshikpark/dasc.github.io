@@ -64,6 +64,8 @@ def test_mobile_accessibility_overflow_motion_and_print_rules_exist() -> None:
     assert ":focus-visible" in css
     assert "prefers-reduced-motion: reduce" in css
     assert "@media print" in css
+    assert "counter-increment: dasc-equation" in css
+    assert 'content: "(" counter(dasc-equation) ")"' in css
     assert 'aria-controls="__drawer"' in header
     assert 'aria-label="Open documentation navigation"' in header
     content = (ROOT / "docs/overrides/partials/content.html").read_text(encoding="utf-8")

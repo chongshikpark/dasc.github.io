@@ -302,3 +302,13 @@ This gate checks document language and title, main and named navigation
 landmarks, one level-one heading, unskipped heading order, image alternative-text
 attributes, table headers, and unique element IDs. It complements—but does not
 replace—manual keyboard, zoom, contrast, screen-reader, mobile, and print review.
+
+DASC physics equations use native MathML inside locally owned accessible groups,
+with descriptive labels, stable `eq-` anchors, visible CSS numbering, horizontal
+overflow at narrow widths, and print-safe styling. No remote equation renderer
+or font is downloaded. Validate authored equation references, citation-footnote
+keys, and forbidden local paths with:
+
+```bash
+python scripts/validate_physics_docs.py --docs docs
+```
