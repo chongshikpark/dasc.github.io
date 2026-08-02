@@ -217,6 +217,13 @@ concurrency:
 
 Pin every action to a reviewed commit SHA. Configure the repository's **Settings → Pages → Build and deployment → Source** to **GitHub Actions**. The workflow must not commit the built `site/` directory or use a `gh-pages` branch.
 
+The repository workflow keeps Pages enablement disabled and cannot perform the
+required administrative review. Before the first deployment, follow
+`docs/operations/pages-deployment-checklist.md` to configure environment and
+branch protection, inspect the first artifact, verify the site while signed out,
+and rehearse the reviewed rollback procedure. Do not push or manually dispatch
+the deployment workflow until that release is explicitly authorized.
+
 ## Security model
 
 - The manifest is an allowlist, not a discovery mechanism.
