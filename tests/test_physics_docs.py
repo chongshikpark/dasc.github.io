@@ -82,3 +82,29 @@ def test_eigenmode_derivation_is_explicitly_navigated() -> None:
         "eq-cavity-boundary-residual",
     ):
         assert f'id="{equation_id}"' in equations
+
+
+def test_da_tpsa_lie_section_is_explicitly_navigated() -> None:
+    pages = (
+        "dasc-da-tpsa.md",
+        "dasc-da-self-consistency.md",
+        "dasc-da-lie-maps.md",
+        "dasc-da-pipelines.md",
+        "dasc-da-verification.md",
+    )
+    config = (ROOT / "mkdocs.yml").read_text()
+    assert all(page in config for page in pages)
+
+    equations = "\n".join((ROOT / "docs" / page).read_text() for page in pages)
+    for equation_id in (
+        "eq-tpsa-expansion",
+        "eq-tpsa-coefficient-derivative",
+        "eq-tpsa-small-example",
+        "eq-da-linear-field-propagation",
+        "eq-da-fixed-point-derivative",
+        "eq-da-poisson-bracket",
+        "eq-da-symmetric-split",
+        "eq-da-symplectic-defect",
+        "eq-da-derivative-error",
+    ):
+        assert f'id="{equation_id}"' in equations

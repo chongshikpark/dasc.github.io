@@ -79,7 +79,13 @@ nav:
           - Frames, coordinates, units, and conventions: dasc-conventions.md
           - Potentials, fields, and particle dynamics: dasc-potentials-fields-dynamics.md
           - Approximations and validity limits: dasc-validity-limits.md
-      - Differential-algebra methods: dasc-differential-algebra-methods.md
+      - DA, TPSA, and Lie methods:
+          - Overview: dasc-differential-algebra-methods.md
+          - DA/TPSA objects and coefficients: dasc-da-tpsa.md
+          - Differentiating self-consistent calculations: dasc-da-self-consistency.md
+          - Lie maps and symplectic structure: dasc-da-lie-maps.md
+          - TGF and eigenmode dependency maps: dasc-da-pipelines.md
+          - Verification, limits, and scaling: dasc-da-verification.md
       - Truncated Green's-function method:
           - Overview: dasc-tgf-method.md
           - Free-space Poisson problem: dasc-tgf-free-space-poisson.md
