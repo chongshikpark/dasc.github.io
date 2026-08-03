@@ -86,7 +86,13 @@ nav:
           - TGF/VGF formulation: dasc-tgf-formulation.md
           - Fields, particle forces, and kicks: dasc-tgf-field-kick.md
           - Verification and convergence: dasc-tgf-verification.md
-      - Eigenmode method: dasc-eigenmode-method.md
+      - Causal finite-cavity eigenmode method:
+          - Overview: dasc-eigenmode-method.md
+          - Geometry, sources, gauge, and boundaries: dasc-eigenmode-problem.md
+          - Closed-cavity retarded modal solution: dasc-eigenmode-closed-cavity.md
+          - Analytical fields and particle coupling: dasc-eigenmode-fields.md
+          - Aperture coupling and downstream pipe: dasc-eigenmode-aperture.md
+          - Verification, convergence, and evidence: dasc-eigenmode-verification.md
       - Comparison and method selection: dasc-method-selection.md
       - Reproducibility: dasc-reproducibility.md
       - Research outputs and publications:

@@ -53,3 +53,32 @@ def test_tgf_derivation_is_explicitly_navigated() -> None:
         "eq-tgf-relative-l2",
     ):
         assert f'id="{equation_id}"' in equations
+
+
+def test_eigenmode_derivation_is_explicitly_navigated() -> None:
+    pages = (
+        "dasc-eigenmode-problem.md",
+        "dasc-eigenmode-closed-cavity.md",
+        "dasc-eigenmode-fields.md",
+        "dasc-eigenmode-aperture.md",
+        "dasc-eigenmode-verification.md",
+    )
+    config = (ROOT / "mkdocs.yml").read_text()
+    assert all(page in config for page in pages)
+
+    equations = "\n".join((ROOT / "docs" / page).read_text() for page in pages)
+    for equation_id in (
+        "eq-cavity-domains",
+        "eq-cavity-source",
+        "eq-cavity-wave-equations",
+        "eq-cavity-potential-boundaries",
+        "eq-cavity-radial-mode",
+        "eq-cavity-scalar-green",
+        "eq-cavity-scalar-potential",
+        "eq-cavity-fields",
+        "eq-cavity-lorentz-force",
+        "eq-aperture-matching",
+        "eq-small-aperture-limit",
+        "eq-cavity-boundary-residual",
+    ):
+        assert f'id="{equation_id}"' in equations

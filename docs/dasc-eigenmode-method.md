@@ -1,42 +1,24 @@
-# Eigenmode method
+# Causal finite-cavity eigenmode method
 
-The eigenmode section concerns causal electromagnetic space-charge fields for an
-axisymmetric source in a finite cylindrical conducting cavity, with a centered
-aperture and downstream circular pipe. It does not reuse the free-space TGF
-boundary model.
+This section derives the causal electromagnetic self-field of an axisymmetric
+source in a cylindrical perfect-electric-conductor (PEC) cavity. A centered
+aperture connects the cavity to a semi-infinite circular pipe. This is a
+boundary-aware, time-retarded problem; it is not the free-space Poisson problem
+solved by the [TGF method](dasc-tgf-method.md).
 
-## Finite cylindrical cavity problem
+1. [Geometry, sources, gauge, and boundaries](dasc-eigenmode-problem.md)
+2. [Closed-cavity retarded modal solution](dasc-eigenmode-closed-cavity.md)
+3. [Analytical field reconstruction](dasc-eigenmode-fields.md)
+4. [Aperture coupling and downstream pipe](dasc-eigenmode-aperture.md)
+5. [Verification, convergence, and evidence](dasc-eigenmode-verification.md)
 
-The detailed derivation will define the cavity, cathode, end wall, aperture,
-source trajectory, symmetry, conducting boundaries, initial conditions, and
-gauge before presenting modal solutions.
+!!! warning "Three distinct physical problems"
+    The closed cavity is the exactly derived reference problem. The
+    aperture-coupled cavity and pipe require mode matching. Small-aperture
+    theory is only a controlled asymptotic benchmark when its scale conditions
+    hold; it is not the primary aperture model.
 
-## Retarded scalar and vector potentials
-
-The documentation will distinguish scalar and longitudinal vector-potential
-boundary conditions and their axial modal families. Retarded support and causal
-integration must be explicit.
-
-## Modal field derivation
-
-Radial and axial eigenfunctions, source projections, modal normalization, and
-field reconstruction will use unambiguous indices and separately checked signs.
-
-## Aperture and downstream-pipe coupling
-
-The closed-cavity solution is the reference problem. Mode matching is the
-planned primary aperture method; small-aperture theory is retained only as a
-controlled asymptotic benchmark where its scale assumptions hold.
-
-## Verification and convergence
-
-Planned gates include boundary residuals, symmetry and on-axis limits, causal
-arrival checks, mode/time convergence, aperture limits, mode-matching
-continuity, energy flow, and independent field comparison. None is presented as
-a completed validation result here.
-
-See the public DASC
-[reassessed cavity source](https://github.com/chongshikpark/dasc/blob/94033eae4d8eac81f4c42c41f6cfba69e1cd2a25/docs/space_charge_fields_with_aperture_study.tex).
-The earlier small-hole manuscript and incremental supplements remain legacy
-sources and are not the controlling formulation.
-
+The derivation follows the reviewed DASC
+[finite-cavity source](https://github.com/chongshikpark/dasc/blob/94033eae4d8eac81f4c42c41f6cfba69e1cd2a25/docs/space_charge_fields_with_aperture_study.tex).
+The earlier small-hole manuscript and incremental supplements are legacy
+sources, not the controlling formulation.
