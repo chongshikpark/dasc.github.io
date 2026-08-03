@@ -108,3 +108,27 @@ def test_da_tpsa_lie_section_is_explicitly_navigated() -> None:
         "eq-da-derivative-error",
     ):
         assert f'id="{equation_id}"' in equations
+
+
+def test_comparison_validation_and_reproducibility_are_navigated() -> None:
+    config = (ROOT / "mkdocs.yml").read_text()
+    for page in (
+        "dasc-method-selection.md",
+        "dasc-validation-matrix.md",
+        "dasc-reproducibility.md",
+    ):
+        assert page in config
+
+    matrix = (ROOT / "docs/dasc-validation-matrix.md").read_text()
+    assert "Artifact pending" in matrix
+    assert "Cavity calculation is self-consistent and symplectic" in matrix
+    assert "**Open.** No current claim is allowed." in matrix
+
+    reproducibility = (ROOT / "docs/dasc-reproducibility.md").read_text()
+    for required in (
+        "Full DASC, PyDASC, website",
+        "seed or quiet-start definition",
+        "SHA-256 checksums",
+        "known limitations",
+    ):
+        assert required in reproducibility

@@ -84,9 +84,10 @@ claim against independent evidence and convergence criteria.
 - PyDASC publishes reviewed software and convention pages through the website's
   explicit source allowlist. Software tests are not by themselves scientific
   validation of every proposed DASC result.
-- The detailed DASC physics pages are an approved information architecture at
-  this stage. Shared derivations, equations, citations, benchmark results, and
-  validation matrices are deferred to later reviewed tasks.
+- The detailed DASC physics pages now provide reviewed shared foundations, TGF
+  and causal eigenmode derivations, DA/TPSA/Lie methods, a method comparison,
+  and a claim-level validation matrix. They do not publish an approved numerical
+  result package.
 - Planned kinetic-resonance, optimization, aperture-coupling, and
   self-consistent-trajectory results must not be described as completed.
 - The two formulations intentionally omit or postpone phenomena outside their
@@ -100,5 +101,5 @@ claim against independent evidence and convergence criteria.
 - [Reviewed DASC source overview](dasc/index.md)
 - [Portal collection and publication policy](https://github.com/chongshikpark/dasc.github.io)
 - [Reproducibility section](dasc-reproducibility.md)
+- [Physics claim validation matrix](dasc-validation-matrix.md)
 - [Research outputs and publications](dasc-research-outputs.md)
-

@@ -11,6 +11,9 @@ The TGF line studies differentiable self-consistent free-space space-charge
 maps, energy-consistent kicks, map diagnostics, and selected sensitivity or
 optimization applications. Proposed collective-physics extensions require
 their own convergence, independent verification, and scientific approval.
+Reusable theory belongs in the [TGF derivation](dasc-tgf-method.md), map and
+sensitivity concepts in [DA/TPSA/Lie methods](dasc-differential-algebra-methods.md),
+and evidence decisions in the [validation matrix](dasc-validation-matrix.md).
 
 ## Eigenmode research line
 
@@ -18,6 +21,17 @@ The eigenmode line studies causal fields in a finite cylindrical cavity and the
 coupling of a centered aperture to a downstream pipe. Its controlling source is
 the reassessed finite-cavity formulation; legacy small-hole drafts do not by
 themselves establish a validated result.
+Reusable theory belongs in the [causal eigenmode derivation](dasc-eigenmode-method.md),
+not in a paper abstract or milestone narrative.
+
+## Output record policy
+
+Paper titles, abstracts, journal targets, milestone schedules, manuscript
+freezes, submission status, and author decisions may be recorded in this
+section or the immutable reviewed source overview. They must link to shared
+physics pages rather than duplicate equations, and every numerical figure or
+table must link to a [reproducible result package](dasc-reproducibility.md).
+No such allowlisted package is currently published by this portal.
 
 ## Current public source overview
 
@@ -30,4 +44,3 @@ is scientifically invalid.
 For reusable concepts, return to the [project overview](dasc-project-overview.md),
 [physics foundations](dasc-physics-foundations.md), or
 [comparison and method selection](dasc-method-selection.md).
-

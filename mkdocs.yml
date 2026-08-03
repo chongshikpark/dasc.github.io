@@ -100,6 +100,7 @@ nav:
           - Aperture coupling and downstream pipe: dasc-eigenmode-aperture.md
           - Verification, convergence, and evidence: dasc-eigenmode-verification.md
       - Comparison and method selection: dasc-method-selection.md
+      - Physics claim validation matrix: dasc-validation-matrix.md
       - Reproducibility: dasc-reproducibility.md
       - Research outputs and publications:
           - Overview: dasc-research-outputs.md
