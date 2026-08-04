@@ -19,7 +19,11 @@ class PageAudit(HTMLParser):
         self.images_without_alt = 0
         self.tables = 0
         self.table_headers = 0
+        self.tables_without_scroll_region = 0
+        self.invalid_scroll_regions = 0
         self.in_table = 0
+        self.scroll_region_depth = 0
+        self.div_scroll_stack: list[bool] = []
         self.has_main = False
         self.has_title = False
         self.has_lang = False
@@ -40,11 +44,25 @@ class PageAudit(HTMLParser):
             self.has_main = True
         elif tag == "nav" and (values.get("aria-label") or values.get("aria-labelledby")):
             self.named_navs += 1
+        elif tag == "div":
+            classes = (values.get("class") or "").split()
+            is_scroll_region = "dasc-table-scroll" in classes
+            self.div_scroll_stack.append(is_scroll_region)
+            if is_scroll_region:
+                self.scroll_region_depth += 1
+                if (
+                    values.get("role") != "region"
+                    or values.get("tabindex") != "0"
+                    or not values.get("aria-label")
+                ):
+                    self.invalid_scroll_regions += 1
         elif tag == "img" and "alt" not in values:
             self.images_without_alt += 1
         elif tag == "table":
             self.tables += 1
             self.in_table += 1
+            if not self.scroll_region_depth:
+                self.tables_without_scroll_region += 1
         elif tag == "th" and self.in_table:
             self.table_headers += 1
         elif len(tag) == 2 and tag[0] == "h" and tag[1].isdigit():
@@ -55,6 +73,9 @@ class PageAudit(HTMLParser):
     def handle_endtag(self, tag: str) -> None:
         if tag == "table":
             self.in_table -= 1
+        elif tag == "div" and self.div_scroll_stack:
+            if self.div_scroll_stack.pop():
+                self.scroll_region_depth -= 1
 
 
 def validate(site: Path) -> None:
@@ -81,6 +102,14 @@ def validate(site: Path) -> None:
             failures.append(f"{audit.images_without_alt} image(s) lack alt attributes")
         if audit.tables and not audit.table_headers:
             failures.append("table markup has no header cells")
+        if audit.tables_without_scroll_region:
+            failures.append(
+                f"{audit.tables_without_scroll_region} table(s) lack keyboard-scrollable regions"
+            )
+        if audit.invalid_scroll_regions:
+            failures.append(
+                f"{audit.invalid_scroll_regions} table region(s) lack required accessibility attributes"
+            )
         if audit.duplicate_ids:
             failures.append(f"duplicate ids: {sorted(audit.duplicate_ids)}")
         if not audit.named_navs:

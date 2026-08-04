@@ -3,11 +3,13 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
 import yaml
 
 import sys
 sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
 from validate_accessibility import validate as validate_accessibility
+from mkdocs_hooks import on_page_content
 
 
 ROOT = Path(__file__).parents[1]
@@ -64,6 +66,9 @@ def test_mobile_accessibility_overflow_motion_and_print_rules_exist() -> None:
     assert ":focus-visible" in css
     assert "prefers-reduced-motion: reduce" in css
     assert "@media print" in css
+    assert ".dasc-table-scroll:focus-visible" in css
+    assert "overflow-x: auto" in css
+    assert "overscroll-behavior-inline: contain" in css
     assert "counter-increment: dasc-equation" in css
     assert 'content: "(" counter(dasc-equation) ")"' in css
     assert 'aria-controls="__drawer"' in header
@@ -82,8 +87,39 @@ def test_built_site_passes_semantic_accessibility_audit(tmp_path: Path) -> None:
     page.write_text(
         '<!doctype html><html lang="en"><head><title>Page</title></head>'
         '<body><nav aria-label="Primary"></nav><main><h1>Page</h1>'
-        '<h2>Section</h2><table><tr><th>Value</th></tr></table>'
+        '<h2>Section</h2><div class="dasc-table-scroll" role="region" '
+        'tabindex="0" aria-label="Scrollable table: Values">'
+        '<table><tr><th>Value</th></tr></table></div>'
         '<img src="example.png" alt="Example"></main></body></html>',
         encoding="utf-8",
     )
     validate_accessibility(tmp_path)
+
+
+def test_table_hook_adds_named_keyboard_scroll_regions() -> None:
+    class Page:
+        title = 'Methods & "evidence"'
+
+    rendered = on_page_content(
+        "<h1>Page</h1><table><thead><tr><th>Value</th></tr></thead></table>",
+        Page(),
+    )
+
+    assert rendered.count('class="dasc-table-scroll"') == 1
+    assert 'role="region"' in rendered
+    assert 'tabindex="0"' in rendered
+    assert 'aria-label="Scrollable table: Methods &amp; &quot;evidence&quot;, table 1"' in rendered
+    assert "<table><thead>" in rendered
+
+
+def test_accessibility_audit_rejects_unwrapped_table(tmp_path: Path) -> None:
+    page = tmp_path / "index.html"
+    page.write_text(
+        '<!doctype html><html lang="en"><head><title>Page</title></head>'
+        '<body><nav aria-label="Primary"></nav><main><h1>Page</h1>'
+        '<table><tr><th>Value</th></tr></table></main></body></html>',
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="lack keyboard-scrollable regions"):
+        validate_accessibility(tmp_path)

@@ -3,9 +3,10 @@
 ## Review disposition
 
 **Conditional; not release-clean.** No critical model-boundary, sign, causality,
-or false-validation defect was found. Two high-severity rendered-content issues,
-two medium documentation/provenance issues, one low-severity stale-workflow issue,
-and one high-priority manual-test gap remain.
+or false-validation defect was found. DASC-REV-001 now has an automated fix and
+requires hands-on confirmation. One high-severity notation issue, two medium
+documentation/provenance issues, one low-severity stale-workflow issue, and one
+high-priority manual-test gap remain.
 
 This was a review-only task. No disputed physics or reported defect was silently
 repaired. No source lock, imported file, manifest, deployment setting, or
@@ -36,8 +37,15 @@ publication status changed.
   container, or apply overflow directly to a suitable block wrapper generated
   consistently by MkDocs. Preserve header semantics and add a visible focus
   style.
-- **Retest:** **Not passed.** Test narrow mobile widths, 200% and 400% zoom,
-  keyboard-only horizontal scrolling, forced colors, and print/PDF.
+- **Resolution:** implemented after the review with a deterministic MkDocs hook
+  that wraps every content table in a named `role="region"`, `tabindex="0"`
+  scroll container. CSS supplies local horizontal overflow, overscroll
+  containment, a visible focus indicator, narrow scrollbars, and print behavior.
+  The semantic validator rejects unwrapped or incorrectly attributed tables.
+- **Retest:** **Automated checks passed.** All built tables have named keyboard
+  scroll regions; regression, strict-build, site, and semantic-accessibility
+  checks pass. Hands-on narrow viewport, 200%/400% zoom, keyboard, forced-color,
+  and print/PDF testing remains pending under DASC-REV-GAP-001.
 
 ### High — DASC-REV-002: MathML encodes volume elements with the exponent on the variable
 
@@ -171,7 +179,7 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 ## Automated verification
 
-- 27 tests passed.
+- 29 tests passed after the DASC-REV-001 regression coverage was added.
 - Physics equation, anchor, citation, and forbidden-path validation passed.
 - Exact-lock source collection and publication-boundary validation passed.
 - Repeated source assembly produced no generated-content diff.
@@ -184,7 +192,8 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 ## Release recommendation
 
-Resolve DASC-REV-001 through DASC-REV-004, then run the interactive review in
+Resolve DASC-REV-002 through DASC-REV-004, complete the hands-on retest of the
+DASC-REV-001 fix, and run the remaining interactive review in
 DASC-REV-GAP-001 before calling the DASC physics section release-clean.
 DASC-REV-005 may follow in the same editorial pass. Numerical physics claims
 remain artifact-pending exactly as stated in the validation matrix.

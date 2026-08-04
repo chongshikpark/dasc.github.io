@@ -206,10 +206,27 @@ a,
 }
 
 .md-typeset__table,
-.md-typeset table:not([class]) {
-  display: table;
+.dasc-table-scroll {
   width: 100%;
   max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.dasc-table-scroll {
+  margin: 1em 0;
+  border-radius: 0.15rem;
+}
+
+.dasc-table-scroll:focus-visible {
+  outline: 3px solid var(--dasc-focus);
+  outline-offset: 2px;
+}
+
+.md-typeset table:not([class]) {
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
   font-size: 0.9rem;
 }
 
@@ -544,16 +561,8 @@ a,
     margin-inline: 0;
   }
 
-  .md-typeset__table {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-  }
-
-  .md-typeset table:not([class]) {
-    width: max-content;
-    min-width: 100%;
+  .dasc-table-scroll {
+    scrollbar-width: thin;
   }
 }
 
@@ -619,5 +628,10 @@ a,
   .md-typeset .admonition,
   .dasc-equation {
     break-inside: avoid;
+  }
+
+  .dasc-table-scroll {
+    overflow: visible;
+    outline: 0;
   }
 }
