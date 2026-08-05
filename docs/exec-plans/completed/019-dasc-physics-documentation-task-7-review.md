@@ -115,8 +115,15 @@ publication status changed.
 - **Proposed owner:** portal provenance and DASC validation owners.
 - **Proposed correction:** link every component and named test/reference to its
   complete path at the locked PyDASC commit; retain the artifact-pending label.
-- **Retest:** **Not passed.** Check every matrix link reaches the intended public
-  repository/path/SHA and that no branch link replaces an immutable revision.
+- **Resolution:** implemented after the review. Every named PyDASC component,
+  test, and reference now displays its complete repository-relative path and
+  links to the exact locked commit. The small-hole and self-consistent-cavity
+  rows retain their explicit evidence gaps rather than linking unrelated tests;
+  all artifact-pending labels remain unchanged.
+- **Retest:** **Automated checks passed.** Regression coverage requires complete
+  path labels, the locked 40-character SHA, and immutable `blob` or `tree`
+  targets, and rejects `main` or `master` links. The GitHub API confirmed that
+  every linked path exists in the public PyDASC tree at the locked revision.
 
 ### Low — DASC-REV-005: completed task numbers remain in reader-facing physics prose
 
@@ -174,8 +181,8 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
   contain the referenced source files.
 - The locked PyDASC checkout at
   `0506b8a9feb75813ae979f0c1c25a307b21096d2` contains the components and tests
-  summarized by the matrix. Direct remote URL fetching was unavailable, so
-  public reachability still belongs in the link retest.
+  summarized by the matrix. The public GitHub API exposes the same files at that
+  exact immutable tree, and every matrix target was checked against it.
 - The generated search index contains space charge, TGF, truncated Green
   function, eigenmode, retarded Green function, DA, TPSA, Lie map,
   symplecticity, and causality.
@@ -195,7 +202,7 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 ## Automated verification
 
-- 32 tests passed after DASC-REV-001 through DASC-REV-003 regression coverage
+- 33 tests passed after DASC-REV-001 through DASC-REV-004 regression coverage
   was added.
 - Physics equation, anchor, citation, and forbidden-path validation passed.
 - Exact-lock source collection and publication-boundary validation passed.
@@ -209,8 +216,8 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 ## Release recommendation
 
-Resolve DASC-REV-004, complete the hands-on retests of the DASC-REV-001 through
-DASC-REV-003 fixes, and run the remaining interactive review in
-DASC-REV-GAP-001 before calling the DASC physics section release-clean.
-DASC-REV-005 may follow in the same editorial pass. Numerical physics claims
-remain artifact-pending exactly as stated in the validation matrix.
+Complete the hands-on retests of the DASC-REV-001 through DASC-REV-003 fixes and
+run the remaining interactive review in DASC-REV-GAP-001 before calling the
+DASC physics section release-clean. DASC-REV-005 may follow in the same
+editorial pass. Numerical physics claims remain artifact-pending exactly as
+stated in the validation matrix.
