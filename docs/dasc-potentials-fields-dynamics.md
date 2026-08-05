@@ -35,7 +35,7 @@ reduce to the Poisson boundary-value problem
 Its exact free-space Green-function representation is
 
 <div id="eq-coulomb-convolution" class="dasc-equation" role="group" aria-label="Coulomb Green-function convolution for electrostatic potential">
-<math display="block"><mi>φ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub></mrow></mfrac><msup><mo>∫</mo><msup><mi mathvariant="normal">ℝ</mi><mn>3</mn></msup></msup><mfrac><mrow><mi>ρ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>′</mo><mo>)</mo></mrow><mrow><mo>‖</mo><mi mathvariant="bold">r</mi><mo>−</mo><mi mathvariant="bold">r</mi><mo>′</mo><mo>‖</mo></mrow></mfrac><mrow><mi>d</mi><msup><mi>r</mi><mn>3</mn></msup><mo>′</mo></mrow><mo>.</mo></math>
+<math display="block"><mi>φ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><mrow><mn>4</mn><mi>π</mi><msub><mi>ε</mi><mn>0</mn></msub></mrow></mfrac><msup><mo>∫</mo><msup><mi mathvariant="normal">ℝ</mi><mn>3</mn></msup></msup><mfrac><mrow><mi>ρ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>′</mo><mo>)</mo></mrow><mrow><mo>‖</mo><mi mathvariant="bold">r</mi><mo>−</mo><mi mathvariant="bold">r</mi><mo>′</mo><mo>‖</mo></mrow></mfrac><mrow><msup><mi>d</mi><mn>3</mn></msup><msup><mi mathvariant="bold">r</mi><mo>′</mo></msup></mrow><mo>.</mo></math>
 </div>
 
 Conducting walls, apertures, or image charges are not contained in
@@ -77,4 +77,3 @@ both TGF and cavity dynamics.
 
 [^jackson]: J. D. Jackson, *Classical Electrodynamics*, 3rd ed., cited by the reviewed DASC cavity source.
 [^vico]: F. Vico, L. Greengard, and M. Ferrando, “Fast convolution with free-space Green's functions,” *J. Comput. Phys.* 323 (2016), 191–203, [doi:10.1016/j.jcp.2016.07.028](https://doi.org/10.1016/j.jcp.2016.07.028).
-

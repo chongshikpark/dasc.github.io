@@ -8,7 +8,7 @@ import pytest
 ROOT = Path(__file__).parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from validate_physics_docs import validate
+from validate_physics_docs import MISPLACED_MEASURE_EXPONENT, validate
 
 
 def test_authored_physics_docs_have_valid_equations_and_citations() -> None:
@@ -20,6 +20,27 @@ def test_undefined_equation_and_citation_keys_fail(tmp_path: Path) -> None:
     page.write_text("# Test\n\n[missing](#eq-missing) and citation[^missing].\n")
     with pytest.raises(ValueError):
         validate(tmp_path)
+
+
+def test_measure_exponent_on_coordinate_fails(tmp_path: Path) -> None:
+    page = tmp_path / "dasc-test.md"
+    page.write_text(
+        '# Test\n\n<div id="eq-test" class="dasc-equation" role="group" '
+        'aria-label="Invalid measure">\n<math display="block">'
+        '<mi>d</mi><msup><mi>r</mi><mn>3</mn></msup></math>\n</div>\n'
+    )
+    with pytest.raises(ValueError, match="measure exponent"):
+        validate(tmp_path)
+
+
+def test_three_dimensional_measures_use_d_cubed_not_coordinate_cubed() -> None:
+    physics = "\n".join(
+        page.read_text() for page in sorted((ROOT / "docs").glob("dasc-*.md"))
+    )
+    assert "<mrow><mi>d</mi><mi>V</mi></mrow>" in physics
+    assert '<mrow><msup><mi>d</mi><mn>3</mn></msup><mi mathvariant="bold">r</mi></mrow>' in physics
+    assert '<mrow><msup><mi>d</mi><mn>3</mn></msup><mi mathvariant="bold">k</mi></mrow>' in physics
+    assert not MISPLACED_MEASURE_EXPONENT.search(physics)
 
 
 def test_tgf_derivation_is_explicitly_navigated() -> None:

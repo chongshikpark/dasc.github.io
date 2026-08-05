@@ -16,6 +16,9 @@ FOOTNOTE_MARK = re.compile(r"\[\^([A-Za-z0-9_-]+)\]")
 FOOTNOTE_DEF = re.compile(r"^\[\^([A-Za-z0-9_-]+)\]:", re.MULTILINE)
 LOCAL_PATH = re.compile(r"/(?:Users|home)/[^\s)<]+")
 UNSUPPORTED_TEX = re.compile(r"\\(?:ref|eqref|cite)\{|\$\$|\\\[|\\\]")
+MISPLACED_MEASURE_EXPONENT = re.compile(
+    r"<mi>d</mi><msup><mi(?:\s+[^>]*)?>(?:V|r|k)</mi><mn>3</mn></msup>"
+)
 MATH_GROUP = re.compile(
     r'<div\s+id="eq-[a-z0-9-]+"\s+class="dasc-equation"\s+'
     r'role="group"\s+aria-label="[^"]+">\s*<math\s+display="block">',
@@ -35,6 +38,10 @@ def validate(docs: Path) -> None:
         texts[page] = text
         if LOCAL_PATH.search(text) or UNSUPPORTED_TEX.search(text):
             raise ValueError(f"unsafe path or unsupported TeX reference in {page.name}")
+        if MISPLACED_MEASURE_EXPONENT.search(text):
+            raise ValueError(
+                f"three-dimensional measure exponent is attached to the variable in {page.name}"
+            )
         ids = EQUATION_ID.findall(text)
         if len(ids) != len(set(ids)):
             raise ValueError(f"duplicate equation id in {page.name}")

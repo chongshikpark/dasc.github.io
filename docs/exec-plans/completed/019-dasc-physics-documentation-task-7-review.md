@@ -4,9 +4,10 @@
 
 **Conditional; not release-clean.** No critical model-boundary, sign, causality,
 or false-validation defect was found. DASC-REV-001 now has an automated fix and
-requires hands-on confirmation. One high-severity notation issue, two medium
-documentation/provenance issues, one low-severity stale-workflow issue, and one
-high-priority manual-test gap remain.
+requires hands-on confirmation. DASC-REV-002 now has an automated fix and
+requires browser/screen-reader confirmation. Two medium documentation/provenance
+issues, one low-severity stale-workflow issue, and one high-priority manual-test
+gap remain.
 
 This was a review-only task. No disputed physics or reported defect was silently
 repaired. No source lock, imported file, manifest, deployment setting, or
@@ -68,8 +69,15 @@ publication status changed.
 - **Proposed correction:** encode a standard volume element consistently, such
   as `<msup><mi>d</mi><mn>3</mn></msup><mi>r</mi>` for d³r or `<mi>d</mi><mi>V</mi>`
   for dV, including primed source coordinates.
-- **Retest:** **Not passed.** Re-run dimensional review, inspect browser and
-  screen-reader math output, and confirm corrected search-index text.
+- **Resolution:** implemented after the review. The generic volume integral now
+  uses dV; Cartesian Fourier and Coulomb measures use d³r and d³k; primed source
+  measures attach the prime to **r**, not to the exponent. The physics validator
+  and regression tests now reject the former dV³/dr³/dk³ MathML structure.
+- **Retest:** **Automated checks passed.** Dimensional source review, equation
+  validation, strict build, and semantic-accessibility checks pass. The rebuilt
+  search index contains `d3r` and `d3k` and no `dV3`, `dr3`, or `dk3`. Rendered
+  browser and screen-reader confirmation remains pending under
+  DASC-REV-GAP-001 because no browser backend was available.
 
 ### Medium — DASC-REV-003: fixed-point notation is corrupted by Markdown emphasis
 
@@ -179,7 +187,8 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 ## Automated verification
 
-- 29 tests passed after the DASC-REV-001 regression coverage was added.
+- 31 tests passed after the DASC-REV-001 and DASC-REV-002 regression coverage
+  was added.
 - Physics equation, anchor, citation, and forbidden-path validation passed.
 - Exact-lock source collection and publication-boundary validation passed.
 - Repeated source assembly produced no generated-content diff.
@@ -192,8 +201,8 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 ## Release recommendation
 
-Resolve DASC-REV-002 through DASC-REV-004, complete the hands-on retest of the
-DASC-REV-001 fix, and run the remaining interactive review in
-DASC-REV-GAP-001 before calling the DASC physics section release-clean.
+Resolve DASC-REV-003 and DASC-REV-004, complete the hands-on retests of the
+DASC-REV-001 and DASC-REV-002 fixes, and run the remaining interactive review
+in DASC-REV-GAP-001 before calling the DASC physics section release-clean.
 DASC-REV-005 may follow in the same editorial pass. Numerical physics claims
 remain artifact-pending exactly as stated in the validation matrix.

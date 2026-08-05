@@ -29,7 +29,7 @@ Charge and current densities are signed. For an electron bunch, Q &lt; 0. The
 total charge definition is the exact normalization
 
 <div id="eq-total-charge" class="dasc-equation" role="group" aria-label="Total charge equals the volume integral of charge density">
-<math display="block"><mi>Q</mi><mo>=</mo><msub><mo>∫</mo><mi>V</mi></msub><mi>ρ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>,</mo><mi>t</mi><mo>)</mo><mrow><mi>d</mi><msup><mi>V</mi><mn>3</mn></msup></mrow><mo>.</mo></math>
+<math display="block"><mi>Q</mi><mo>=</mo><msub><mo>∫</mo><mi>V</mi></msub><mi>ρ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>,</mo><mi>t</mi><mo>)</mo><mrow><mi>d</mi><mi>V</mi></mrow><mo>.</mo></math>
 </div>
 
 The field definitions are **E** = −∇φ − ∂**A**/∂t and **B** = ∇×**A**.[^jackson]
@@ -41,7 +41,7 @@ not be hidden in a field convention.
 For a sufficiently integrable scalar field f on ℝ³, DASC uses
 
 <div id="eq-fourier-pair" class="dasc-equation" role="group" aria-label="Forward and inverse Fourier transform pair">
-<math display="block"><mover><mi>f</mi><mo>^</mo></mover><mo>(</mo><mi mathvariant="bold">k</mi><mo>)</mo><mo>=</mo><msup><mo>∫</mo><msup><mi mathvariant="normal">ℝ</mi><mn>3</mn></msup></msup><mi>f</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>)</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>i</mi><mi mathvariant="bold">k</mi><mo>·</mo><mi mathvariant="bold">r</mi></mrow></msup><mrow><mi>d</mi><msup><mi>r</mi><mn>3</mn></msup></mrow><mo>,</mo><mspace width="1em"/><mi>f</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><msup><mrow><mo>(</mo><mn>2</mn><mi>π</mi><mo>)</mo></mrow><mn>3</mn></msup></mfrac><msup><mo>∫</mo><msup><mi mathvariant="normal">ℝ</mi><mn>3</mn></msup></msup><mover><mi>f</mi><mo>^</mo></mover><mo>(</mo><mi mathvariant="bold">k</mi><mo>)</mo><msup><mi>e</mi><mrow><mi>i</mi><mi mathvariant="bold">k</mi><mo>·</mo><mi mathvariant="bold">r</mi></mrow></msup><mrow><mi>d</mi><msup><mi>k</mi><mn>3</mn></msup></mrow><mo>.</mo></math>
+<math display="block"><mover><mi>f</mi><mo>^</mo></mover><mo>(</mo><mi mathvariant="bold">k</mi><mo>)</mo><mo>=</mo><msup><mo>∫</mo><msup><mi mathvariant="normal">ℝ</mi><mn>3</mn></msup></msup><mi>f</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>)</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>i</mi><mi mathvariant="bold">k</mi><mo>·</mo><mi mathvariant="bold">r</mi></mrow></msup><mrow><msup><mi>d</mi><mn>3</mn></msup><mi mathvariant="bold">r</mi></mrow><mo>,</mo><mspace width="1em"/><mi>f</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><msup><mrow><mo>(</mo><mn>2</mn><mi>π</mi><mo>)</mo></mrow><mn>3</mn></msup></mfrac><msup><mo>∫</mo><msup><mi mathvariant="normal">ℝ</mi><mn>3</mn></msup></msup><mover><mi>f</mi><mo>^</mo></mover><mo>(</mo><mi mathvariant="bold">k</mi><mo>)</mo><msup><mi>e</mi><mrow><mi>i</mi><mi mathvariant="bold">k</mi><mo>·</mo><mi mathvariant="bold">r</mi></mrow></msup><mrow><msup><mi>d</mi><mn>3</mn></msup><mi mathvariant="bold">k</mi></mrow><mo>.</mo></math>
 </div>
 
 The discrete FFT scaling is documented in the reviewed

@@ -21,7 +21,7 @@ check is V m⁻² on both sides.
 The free-space Coulomb Green function is G(**r**) = 1/(4π‖**r**‖). Therefore
 
 <div id="eq-tgf-green-convolution" class="dasc-equation" role="group" aria-label="Free-space Coulomb convolution for potential">
-<math display="block"><mi>φ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><msub><mi>ε</mi><mn>0</mn></msub></mfrac><msup><mo>∫</mo><msup><mi mathvariant="normal">ℝ</mi><mn>3</mn></msup></msup><mfrac><mrow><mi>ρ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>′</mo><mo>)</mo></mrow><mrow><mn>4</mn><mi>π</mi><mo>‖</mo><mi mathvariant="bold">r</mi><mo>−</mo><mi mathvariant="bold">r</mi><mo>′</mo><mo>‖</mo></mrow></mfrac><mrow><mi>d</mi><msup><mi>r</mi><mn>3</mn></msup><mo>′</mo></mrow><mo>.</mo></math>
+<math display="block"><mi>φ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><msub><mi>ε</mi><mn>0</mn></msub></mfrac><msup><mo>∫</mo><msup><mi mathvariant="normal">ℝ</mi><mn>3</mn></msup></msup><mfrac><mrow><mi>ρ</mi><mo>(</mo><mi mathvariant="bold">r</mi><mo>′</mo><mo>)</mo></mrow><mrow><mn>4</mn><mi>π</mi><mo>‖</mo><mi mathvariant="bold">r</mi><mo>−</mo><mi mathvariant="bold">r</mi><mo>′</mo><mo>‖</mo></mrow></mfrac><mrow><msup><mi>d</mi><mn>3</mn></msup><msup><mi mathvariant="bold">r</mi><mo>′</mo></msup></mrow><mo>.</mo></math>
 </div>
 
 This is an aperiodic convolution. The 1/‖**r**‖ singularity is integrable in
@@ -44,4 +44,3 @@ condition on the [TGF formulation page](dasc-tgf-formulation.md#eq-tgf-cutoff-co
 If nearby conductors materially change the field, use a boundary-aware solver.
 
 [^vico]: F. Vico, L. Greengard, and M. Ferrando, “Fast convolution with free-space Green's functions,” *J. Comput. Phys.* 323 (2016), 191–203, [doi:10.1016/j.jcp.2016.07.028](https://doi.org/10.1016/j.jcp.2016.07.028).
-
