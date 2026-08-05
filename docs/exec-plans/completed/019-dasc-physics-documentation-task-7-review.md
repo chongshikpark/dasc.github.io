@@ -5,8 +5,9 @@
 **Conditional; not release-clean.** No critical model-boundary, sign, causality,
 or false-validation defect was found. DASC-REV-001 now has an automated fix and
 requires hands-on confirmation. DASC-REV-002 now has an automated fix and
-requires browser/screen-reader confirmation. Two medium documentation/provenance
-issues, one low-severity stale-workflow issue, and one high-priority manual-test
+requires browser/screen-reader confirmation. DASC-REV-003 now has an automated
+fix and requires browser/screen-reader confirmation. One medium provenance
+issue, one low-severity stale-workflow issue, and one high-priority manual-test
 gap remain.
 
 This was a review-only task. No disputed physics or reported defect was silently
@@ -91,8 +92,15 @@ publication status changed.
 - **Proposed owner:** DA/TPSA documentation owner.
 - **Proposed correction:** use inline MathML, escaped stars, or unambiguous
   Unicode notation consistently.
-- **Retest:** **Not passed.** Inspect visible text, copied text, accessibility
-  tree, and search-index extraction.
+- **Resolution:** implemented after the review with inline MathML using the
+  mathematical asterisk operator `∗`, avoiding Markdown delimiter syntax while
+  preserving superscript fixed-point notation. A regression test rejects the
+  former emphasis span and paragraph splitting.
+- **Retest:** **Automated checks passed.** The generated sentence is one
+  paragraph, its MathML contains no `<em>` markup, and search extraction reads
+  `x∗(θ) satisfies x∗=F(x∗,θ)`. Strict-build, site, physics, and semantic-
+  accessibility checks pass. Hands-on copied-text and screen-reader inspection
+  remains pending under DASC-REV-GAP-001.
 
 ### Medium — DASC-REV-004: validation-matrix implementation evidence is not directly traceable
 
@@ -187,7 +195,7 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 ## Automated verification
 
-- 31 tests passed after the DASC-REV-001 and DASC-REV-002 regression coverage
+- 32 tests passed after DASC-REV-001 through DASC-REV-003 regression coverage
   was added.
 - Physics equation, anchor, citation, and forbidden-path validation passed.
 - Exact-lock source collection and publication-boundary validation passed.
@@ -201,8 +209,8 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 ## Release recommendation
 
-Resolve DASC-REV-003 and DASC-REV-004, complete the hands-on retests of the
-DASC-REV-001 and DASC-REV-002 fixes, and run the remaining interactive review
-in DASC-REV-GAP-001 before calling the DASC physics section release-clean.
+Resolve DASC-REV-004, complete the hands-on retests of the DASC-REV-001 through
+DASC-REV-003 fixes, and run the remaining interactive review in
+DASC-REV-GAP-001 before calling the DASC physics section release-clean.
 DASC-REV-005 may follow in the same editorial pass. Numerical physics claims
 remain artifact-pending exactly as stated in the validation matrix.

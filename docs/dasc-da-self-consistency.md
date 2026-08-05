@@ -22,9 +22,7 @@ not represented by this derivative.
 
 ## Iterated and fixed-point models
 
-Suppose a converged self-consistent state x*(θ) satisfies x* = F(x*,θ). If F is
-differentiable at the solution and I−F_x is invertible, implicit
-differentiation gives
+Suppose a converged self-consistent state <math><msup><mi>x</mi><mo>∗</mo></msup><mo>(</mo><mi>θ</mi><mo>)</mo></math> satisfies <math><msup><mi>x</mi><mo>∗</mo></msup><mo>=</mo><mi>F</mi><mo>(</mo><msup><mi>x</mi><mo>∗</mo></msup><mo>,</mo><mi>θ</mi><mo>)</mo></math>. If F is differentiable at the solution and I−F_x is invertible, implicit differentiation gives
 
 <div id="eq-da-fixed-point-derivative" class="dasc-equation" role="group" aria-label="Implicit derivative of a converged self consistent fixed point">
 <math display="block"><mo>(</mo><mi>I</mi><mo>−</mo><msub><mi>F</mi><mi>x</mi></msub><mo>)</mo><mfrac><mrow><mi>d</mi><msup><mi>x</mi><mo>*</mo></msup></mrow><mrow><mi>d</mi><mi>θ</mi></mrow></mfrac><mo>=</mo><msub><mi>F</mi><mi>θ</mi></msub><mo>.</mo></math>

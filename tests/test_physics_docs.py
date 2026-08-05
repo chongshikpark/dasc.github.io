@@ -3,6 +3,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import markdown
 import pytest
 
 ROOT = Path(__file__).parents[1]
@@ -41,6 +42,17 @@ def test_three_dimensional_measures_use_d_cubed_not_coordinate_cubed() -> None:
     assert '<mrow><msup><mi>d</mi><mn>3</mn></msup><mi mathvariant="bold">r</mi></mrow>' in physics
     assert '<mrow><msup><mi>d</mi><mn>3</mn></msup><mi mathvariant="bold">k</mi></mrow>' in physics
     assert not MISPLACED_MEASURE_EXPONENT.search(physics)
+
+
+def test_fixed_point_notation_is_not_parsed_as_markdown_emphasis() -> None:
+    source = (ROOT / "docs/dasc-da-self-consistency.md").read_text()
+    rendered = markdown.markdown(source, extensions=["md_in_html"])
+
+    assert "x*(θ)" not in source
+    assert "x<em>(θ) satisfies x</em>" not in rendered
+    assert "</p>\n<math><msup><mi>x</mi>" not in rendered
+    assert "<math><msup><mi>x</mi><mo><em>" not in rendered
+    assert rendered.count("<msup><mi>x</mi><mo>∗</mo></msup>") == 3
 
 
 def test_tgf_derivation_is_explicitly_navigated() -> None:
