@@ -138,8 +138,14 @@ publication status changed.
 - **Proposed owner:** DASC documentation editor.
 - **Proposed correction:** replace task numbers with links to the completed TGF,
   eigenmode, and DA/TPSA pages while preserving unresolved decisions.
-- **Retest:** **Not passed.** Search all published DASC pages for task-number or
-  future-placeholder language.
+- **Resolution:** implemented after the review. The shared dynamics page now
+  links to the permanent TGF kick and causal cavity force sections, and the
+  eigenmode field page links to the permanent DA/TPSA eigenmode pipeline. The
+  unresolved normalization, trajectory-feedback, and differentiability
+  boundaries remain explicit.
+- **Retest:** **Automated checks passed.** A regression test scans every
+  reader-facing `dasc-*.md` physics page and rejects numbered-task and
+  future-task language.
 
 ## Manual review gap
 
@@ -202,7 +208,7 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 ## Automated verification
 
-- 33 tests passed after DASC-REV-001 through DASC-REV-004 regression coverage
+- 34 tests passed after DASC-REV-001 through DASC-REV-005 regression coverage
   was added.
 - Physics equation, anchor, citation, and forbidden-path validation passed.
 - Exact-lock source collection and publication-boundary validation passed.
@@ -218,6 +224,5 @@ because DASC-REV-001 and DASC-REV-002 affect responsive and assistive output.
 
 Complete the hands-on retests of the DASC-REV-001 through DASC-REV-003 fixes and
 run the remaining interactive review in DASC-REV-GAP-001 before calling the
-DASC physics section release-clean. DASC-REV-005 may follow in the same
-editorial pass. Numerical physics claims remain artifact-pending exactly as
-stated in the validation matrix.
+DASC physics section release-clean. Numerical physics claims remain artifact-
+pending exactly as stated in the validation matrix.

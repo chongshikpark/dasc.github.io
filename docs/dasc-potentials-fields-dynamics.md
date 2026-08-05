@@ -71,9 +71,11 @@ both TGF and cavity dynamics.
 
 !!! danger "Decision required before a shared Hamiltonian equation"
     Do not copy the symbolic upstream factor `C_sc` into a public derivation as
-    though it were frozen. Task 3 must map the TGF Hamiltonian and kick to the
-    exact reviewed PyDASC convention. Task 4 must separately decide how causal
-    cavity fields enter prescribed and self-consistent trajectories.
+    though it were frozen. The [TGF field and kick derivation](dasc-tgf-field-kick.md#kick-map-and-canonical-boundary)
+    defines its present normalization boundary against the reviewed PyDASC
+    convention. The [causal cavity field derivation](dasc-eigenmode-fields.md#force-and-self-consistent-dynamics)
+    separately records the unresolved choice between prescribed and
+    self-consistent trajectories.
 
 [^jackson]: J. D. Jackson, *Classical Electrodynamics*, 3rd ed., cited by the reviewed DASC cavity source.
 [^vico]: F. Vico, L. Greengard, and M. Ferrando, “Fast convolution with free-space Green's functions,” *J. Comput. Phys.* 323 (2016), 191–203, [doi:10.1016/j.jcp.2016.07.028](https://doi.org/10.1016/j.jcp.2016.07.028).

@@ -51,4 +51,5 @@ Differentiation through this pipeline requires smooth source projection, causal
 quadrature, modal evaluation, aperture solve, field evaluation, particle
 coupling, and observable reduction. Mode-set changes, branch-dependent
 quadrature, particle loss, aperture interception, and resonant degeneracy are
-potential nondifferentiable points; Task 5 treats DA/TPSA propagation separately.
+potential nondifferentiable points; the [DA/TPSA eigenmode pipeline](dasc-da-pipelines.md#causal-eigenmode-branch)
+states the differentiability conditions and validation boundary separately.

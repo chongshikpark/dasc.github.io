@@ -186,3 +186,10 @@ def test_validation_matrix_evidence_links_are_complete_and_immutable() -> None:
             f"[`{path}`](https://github.com/chongshikpark/pydasc/blob/{sha}/{path})"
         )
         assert expected in matrix
+
+
+def test_reader_facing_physics_pages_do_not_reference_completed_tasks() -> None:
+    task_reference = re.compile(r"\b(?:future |later |subsequent )?tasks?\s+\d+\b", re.I)
+
+    for page in (ROOT / "docs").glob("dasc-*.md"):
+        assert not task_reference.search(page.read_text()), page
